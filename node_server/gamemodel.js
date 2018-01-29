@@ -2,14 +2,14 @@
 var MyConnection = require('./connection.js');
 
 class BlackJackGame {
-    constructor(ID, player1Name, nPlayers) {
+    constructor(ID, player1Name) {
         this.gameID = ID;
         this.gameEnded = false;
         this.gameStarted = false;
         //players
         this.players=[];
         this.players[0]=player1Name;
-        this.nPlayers = nPlayers;
+        this.nPlayers = 4;
         //
         this.winners=[];
         this.winner = 0;
@@ -75,7 +75,7 @@ class BlackJackGame {
         console.log('Fisher–Yates shuffle');
     }
 
-    firstDraw(nPlayers){
+    firstDraw(){
         console.log('Initial phase: Draw 2 cards in order')
         for (let n = 0; n < this.players.length; n++) {
             /*this.hand = [players[n], this.deck.slice(0, 1)];

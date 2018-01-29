@@ -12,9 +12,9 @@ class GameList {
         return game;
     }
 
-    createGame(playerName, socketID, nPlayers, gameID, x, y) {
+    createGame(playerName, socketID, nPlayers, gameID) {
         console.log("New game: "+gameID+" created by "+ playerName);
-        var game = new Mygame(gameID, playerName, nPlayers, x, y);
+        var game = new Mygame(gameID, playerName, nPlayers);
         game.playersSocketID[0] = socketID;
         game.playersPlaces[0] = socketID;
         if(nPlayers == 1){
