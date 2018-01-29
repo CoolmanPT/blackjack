@@ -13,6 +13,41 @@ axios.defaults.headers.common['Authorization'] = localStorage.getItem('access_to
 * COMPONENTS
 * */
 
+var isUserLogged = {
+    data: {
+        nameOfUser: '',
+    },
+    methods: {
+        checkIfLogged(isLogged, redirectTo){
+            console.log(axios.defaults.headers.common['Authorization'])
+            if(axios.defaults.headers.common['Authorization'] == null){
+                if(!isLogged) {
+                    window.location.href = '/';
+                }
+            } else { //TEM UM TOKEN VAI VERIFICAR SE É VALIDO
+                axios.get('/api/user')
+                    .then((response) => {
+                        if(isLogged){
+                            if(response.data.admin == 1){
+                                window.location.href = '/admin'
+                            } else if (response.data.admin == 0) {
+                                window.location.href = '/game'
+                            }
+                        } else {
+                            
+                            console.log(response.data.name);
+                        }
+                    })
+                    .catch((error) => {
+                        if(!isLogged) {
+                            window.location.href = '/';
+                        }
+                    });
+            }
+        }
+    }
+}
+
 const login = Vue.component('login-component', require('./components/login/loginComponent.vue'));
 const requestPassword = Vue.component('request-password-component', require('./components/login/requestPasswordComponent.vue'));
 const resetPassword = Vue.component('password-reset-component', require('./components/login/resetPasswordComponent.vue'));
@@ -36,5 +71,8 @@ const router = new VueRouter({
 
 new Vue({
     router,
-
+    mixins: [isUserLogged],
+    created: function () {
+        this.checkIfLogged(true);
+    }
 }).$mount('#login_app');

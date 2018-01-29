@@ -7,7 +7,7 @@
                         <h1 class="text-center text-light">New User</h1>
                     </div>
                     <div class="card-body">
-                        <form method="post" v-on:submit="submitForm">
+                        <form method="post" v-on:submit.prevent="submitForm">
 
                             <div class="form-group">
                                 <input type="text" name="name" v-model="name" v-bind:class="{ 'is-invalid': missingName  }"
@@ -139,7 +139,7 @@
                 this.attemptSubmit = false;
                 this.serverErrorCode = 0;
             },
-            submitForm: function () {
+            submitForm: function (event) {
                 //CLEARS SERVER ERROR'S
                 this.serverErrorCode = 0;
                 this.success = false;

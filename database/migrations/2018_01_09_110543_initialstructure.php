@@ -22,6 +22,7 @@ class InitialStructure extends Migration
             $table->boolean('admin')->default(false);
             $table->boolean('blocked')->default(false);
             $table->string('reason_blocked')->nullable();
+            $table->boolean('activated')->default(true);
             $table->string('reason_reactivated')->nullable();
             $table->integer('total_points')->default(0);
             $table->integer('total_games_played')->default(0);
@@ -48,6 +49,14 @@ class InitialStructure extends Migration
             $table->string('hidden_face_image_path');
             $table->boolean('active')->default(true);
             $table->boolean('complete')->default(false);
+            $table->timestamps();
+        });
+
+        Schema::create('activations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('token');
             $table->timestamps();
         });
 
