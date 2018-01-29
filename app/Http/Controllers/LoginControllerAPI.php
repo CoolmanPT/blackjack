@@ -15,13 +15,28 @@ use Validator;
 define('YOUR_SERVER_URL', 'http://blackjack.test');
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', '2');
-define('CLIENT_SECRET','83RMi8CPYOHp5Y3bK873XLk9lFdtXwuyx6b7mHqw');
+define('CLIENT_SECRET','dvkyddgAPJUezMpkI4qyFQHWjs784IFe0kCl1iLi');
 class LoginControllerAPI extends Controller
 {
     use SendsPasswordResetEmails;
+
     //LOGIN METHOD + MAIL
     public function login(Request $request)
     {
+
+        //Search user by email or nickname
+        $user = User::orWhere('email', $request->email)->orWhere('nickname', $request->email)->first();
+        if(!$user){
+            return response()->json(['msg'=>'Utilizador/email não existe.'], 400);
+        }
+
+        if($user->activated == 0){
+            return response()->json(['msg'=>'Utilizador não activo.'], 400);
+        }
+
+        if($user->blocked == 1){
+            return response()->json(['msg'=>'Utilizador bloqueado.'], 400);
+        }
         $http = new \GuzzleHttp\Client;
         $response = $http->post(YOUR_SERVER_URL.'/oauth/token', [
             'form_params' => [
@@ -37,7 +52,7 @@ class LoginControllerAPI extends Controller
         $errorCode= $response->getStatusCode();
 
         if ($errorCode=='200') {
-            Mail::to($request->email)->queue(new LoginMade());
+            //Mail::to($request->email)->queue(new LoginMade());
             return json_decode((string) $response->getBody(), true);
         } else {
             return response()->json(
