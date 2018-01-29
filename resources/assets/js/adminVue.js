@@ -1,18 +1,4 @@
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- *
- *
- * npm run watch-poll
- *
- *
- */
-
-//require('./bootstrap');
-
-
 window.Vue = require('vue');
 
 //IMPORT VUE VALIDATOR
@@ -66,7 +52,12 @@ var isLoggedMixin = {
 /*****************************************
  DASHBOARD, SETTINGS, USERS AND PIECES COMPONENTS
  * **************************************/
-/*
+//DASHBOARD
+const dashboard = Vue.component('dashboard-component', require('./components/admin/dashboard.vue'));
+Vue.component('statistic-component', require('./components/admin/statistic.vue'));
+Vue.component('games-perday-component', require('./components/admin/games-perday-component.vue'));
+Vue.component('users-statistic-component', require('./components/admin/users_statistic.vue'));
+
 //SETTINGS COMPONENT
 const settings = Vue.component('settings-component', require('./components/admin/settings.vue'));
 Vue.component('email-settings-component', require('./components/admin/email_settings.vue'));
@@ -76,11 +67,7 @@ Vue.component('change-password-component', require('./components/admin/change_pa
 //USER COMPONENT
 const users = Vue.component('users-component', require('./components/admin/users.vue'));
 
-//DASHBOARD
-const dashboard = Vue.component('dashboard-component', require('./components/admin/dashboard.vue'));
-Vue.component('statistic-component', require('./components/admin/statistic.vue'));
-Vue.component('games-perday-component', require('./components/admin/games-perday-component.vue'));
-Vue.component('users-statistic-component', require('./components/admin/users_statistic.vue'));
+
 
 //PIECES
 const pieces = Vue.component('pieces-component', require('./components/admin/pieces.vue'));
@@ -88,7 +75,7 @@ Vue.component('pieces-upload', require('./components/admin/pieces_upload.vue'));
 
 /*ROUTES*/
 
-/*
+
 const routes = [
     { path: '/', redirect: '/dashboard' },
     { path: '/dashboard', component: dashboard },
@@ -124,4 +111,3 @@ new Vue({
     }
 }).$mount('#app');
 
-*/
