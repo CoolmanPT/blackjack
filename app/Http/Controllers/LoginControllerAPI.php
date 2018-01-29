@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
-define('YOUR_SERVER_URL', 'http://blackjack.test');
+define('YOUR_SERVER_URL', 'http://blackjack.lol');
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', '2');
-define('CLIENT_SECRET','83RMi8CPYOHp5Y3bK873XLk9lFdtXwuyx6b7mHqw');
+define('CLIENT_SECRET','0r3Mzy1KC43qon9gAx14Elng9wN2qSUzlMThShFK');
 class LoginControllerAPI extends Controller
 {
     use SendsPasswordResetEmails;
@@ -37,7 +37,7 @@ class LoginControllerAPI extends Controller
         $errorCode= $response->getStatusCode();
 
         if ($errorCode=='200') {
-            Mail::to($request->email)->queue(new LoginMade());
+            //Mail::to($request->email)->queue(new LoginMade());
             return json_decode((string) $response->getBody(), true);
         } else {
             return response()->json(
