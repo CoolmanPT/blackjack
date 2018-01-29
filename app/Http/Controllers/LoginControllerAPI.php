@@ -14,8 +14,8 @@ use Validator;
 
 define('YOUR_SERVER_URL', 'http://blackjack.test');
 // Check "oauth_clients" table for next 2 values:
-define('CLIENT_ID', '6');
-define('CLIENT_SECRET','gzKMQmiZSC1ywgpCa5tCQJw1pcOZZJFViM1DEjlZ');
+define('CLIENT_ID', '2');
+define('CLIENT_SECRET','83RMi8CPYOHp5Y3bK873XLk9lFdtXwuyx6b7mHqw');
 class LoginControllerAPI extends Controller
 {
     use SendsPasswordResetEmails;

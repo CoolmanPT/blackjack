@@ -7,7 +7,7 @@
                         <h1 class="text-center text-light">Recover Password</h1>
                     </div>
                     <div class="card-body">
-                        <form method="post" v-on:submit="submitForm">
+                        <form method="post" v-on:submit.prevent="submitForm">
                             <div class="form-group input-group">
                                 <input type="password" name="password" v-model="password" v-bind:class="{ 'is-invalid': missingPassword || invalidPassword }" class="form-control" placeholder="New password"  />
                             </div>
@@ -82,7 +82,7 @@
                 var re = /^[a-zA-Z0-9]{6,}$/;
                 return re.test(password);
             },
-            submitForm: function () {
+            submitForm: function (event) {
                 //CLEARS SERVER ERROR'S
                 this.serverError = false;
                 this.success = false;

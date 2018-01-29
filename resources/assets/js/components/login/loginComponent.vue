@@ -18,7 +18,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form method="post" v-on:submit="submitForm">
+                        <form method="post" v-on:submit.prevent="submitForm">
 
                             <div class="input-group form-group">
                                 <div class="input-group-prepend"><i class="input-group-text fa fa-user"></i></div>
@@ -84,45 +84,45 @@
             },
         },
         methods: {
-            submitForm: function () {
-                //CLEARS SERVER ERROR'S
-                this.serverError = false;
+            submitForm: function (event) {
+                            //CLEARS SERVER ERROR'S
+                            this.serverError = false;
 
-                //PREVENT FORM
-                event.preventDefault();
+                            //PREVENT FORM
+                            event.preventDefault();
 
-                //FORM SUBMITED
-                this.attemptSubmit = true;
+                            //FORM SUBMITED
+                            this.attemptSubmit = true;
 
-                //IF FORM IS VALID MAKE API REQUEST FOR LOGIN
-                if (!this.isFormInvalid) {
-                    const data = {
-                        email: this.username,
-                        password: this.password
-                    };
-                    axios.post('/api/login', data)
-                        .then((response) => {
-                            localStorage.setItem('access_token', 'Bearer ' + response.data.access_token);
-                            axios.get('/api/user', { headers: {"Authorization" : 'Bearer ' + response.data.access_token}})
-                                .then((response) => {
-                                    if(response.data.admin == 1){
-                                        window.location.href = '/admin'
-                                    } else if (response.data.admin == 0) {
-                                        window.location.href = '/game'
-                                    } else {
+                            //IF FORM IS VALID MAKE API REQUEST FOR LOGIN
+                            if (!this.isFormInvalid) {
+                                const data = {
+                                    email: this.username,
+                                    password: this.password
+                                };
+                                axios.post('/api/login', data)
+                                    .then((response) => {
+                                        localStorage.setItem('access_token', 'Bearer ' + response.data.access_token);
+                                        axios.get('/api/user', { headers: {"Authorization" : 'Bearer ' + response.data.access_token}})
+                                            .then((response) => {
+                                                if(response.data.admin == 1){
+                                                    window.location.href = '/admin'
+                                                } else if (response.data.admin == 0) {
+                                                    window.location.href = '/game'
+                                                } else {
+                                                    this.serverError = true;
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                this.serverError = true;
+                                            });
+                                    })
+                                    .catch((error) => {
                                         this.serverError = true;
-                                    }
-                                })
-                                .catch((error) => {
-                                    this.serverError = true;
-                                });
-                        })
-                        .catch((error) => {
-                            this.serverError = true;
-                            this.serverErrorMessage = error.response;
-                        });
-                }
-            },
+                                        this.serverErrorMessage = error.response;
+                                    });
+                            }
+                        },
         }
     }
 </script>

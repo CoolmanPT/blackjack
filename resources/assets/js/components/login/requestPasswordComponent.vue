@@ -7,7 +7,7 @@
                         <h1 class="text-center text-light">Recover Password</h1>
                     </div>
                     <div class="card-body">
-                        <form method="post" v-on:submit="submitForm">
+                        <form method="post" v-on:submit.prevent="submitForm">
                             <div class="input-group form-group">
                                 <div class="input-group-prepend"><i class="input-group-text fa fa-envelope"></i></div>
                                 <input type="text" name="email" v-model="email" v-bind:class="{ 'is-invalid': missingEmail || invalidEmail  }" class="form-control" placeholder="Email"  />
@@ -68,12 +68,13 @@
                 var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(email);
             },
-            submitForm: function () {
+            submitForm: function (event) {
                 //CLEARS SERVER ERROR'S
                 this.serverError = false;
                 this.success = false;
 
                 //PREVENT FORM
+                
                 event.preventDefault();
 
                 //FORM SUBMITED

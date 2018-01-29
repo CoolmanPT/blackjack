@@ -51,8 +51,6 @@ class UserControllerAPI extends Controller
 
                 return response()->json(['msg' => 'Utilizador registado.']);
             } catch (\Exception $e) {
-                print_r($e);
-                exit();
                 return response()->json(['errorCode' => -1, 'msg' => 'Problema ao enviar email. Tente novamente.'], 400);
             }
         } else {
