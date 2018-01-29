@@ -14012,20 +14012,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(38);
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- *
- *
- * npm run watch-poll
- *
- *
- */
-
-//require('./bootstrap');
-
-
 window.Vue = __webpack_require__(10);
 
 //IMPORT VUE VALIDATOR
@@ -14079,67 +14065,51 @@ var isLoggedMixin = {
     /*****************************************
      DASHBOARD, SETTINGS, USERS AND PIECES COMPONENTS
      * **************************************/
-    /*
-    //SETTINGS COMPONENT
-    const settings = Vue.component('settings-component', require('./components/admin/settings.vue'));
-    Vue.component('email-settings-component', require('./components/admin/email_settings.vue'));
-    Vue.component('change-email-component', require('./components/admin/change_email.vue'));
-    Vue.component('change-password-component', require('./components/admin/change_password.vue'));
-    
-    //USER COMPONENT
-    const users = Vue.component('users-component', require('./components/admin/users.vue'));
-    
     //DASHBOARD
-    const dashboard = Vue.component('dashboard-component', require('./components/admin/dashboard.vue'));
-    Vue.component('statistic-component', require('./components/admin/statistic.vue'));
-    Vue.component('games-perday-component', require('./components/admin/games-perday-component.vue'));
-    Vue.component('users-statistic-component', require('./components/admin/users_statistic.vue'));
-    
-    //PIECES
-    const pieces = Vue.component('pieces-component', require('./components/admin/pieces.vue'));
-    Vue.component('pieces-upload', require('./components/admin/pieces_upload.vue'));
-    
-    /*ROUTES*/
+};var dashboard = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('dashboard-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/dashboard.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('statistic-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/statistic.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('games-perday-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/games-perday-component.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('users-statistic-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/users_statistic.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
 
-    /*
-    const routes = [
-        { path: '/', redirect: '/dashboard' },
-        { path: '/dashboard', component: dashboard },
-        { path: '/users', component: users },
-        { path: '/pieces', component: pieces },
-        { path: '/settings', component: settings },
-    ];
-    
-    const router = new VueRouter({
-        routes:routes
-    });
-    
-    new Vue({
-        router,
-        mixins: [isLoggedMixin],
-        computed: {
-    
-        },
-        methods: {
-            logout: function () {
-                axios.post('/api/logout')
-                    .then((response) => {
-                        localStorage.removeItem('access_token');
-                        window.location.href = '/'
-                    })
-                    .catch((error) => {
-                        window.location.href = '/'
-                    });
-            },
-        },
-        created: function () {
-            this.checkIfLogged(false);
+//SETTINGS COMPONENT
+var settings = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('settings-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/settings.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('email-settings-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/email_settings.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('change-email-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/change_email.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('change-password-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/change_password.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+
+//USER COMPONENT
+var users = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('users-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/users.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+
+//PIECES
+var pieces = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('pieces-component', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/pieces.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('pieces-upload', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/admin/pieces_upload.vue\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+
+/*ROUTES*/
+
+var routes = [{ path: '/', redirect: '/dashboard' }, { path: '/dashboard', component: dashboard }, { path: '/users', component: users }, { path: '/pieces', component: pieces }, { path: '/settings', component: settings }];
+
+var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
+    routes: routes
+});
+
+new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
+    router: router,
+    mixins: [isLoggedMixin],
+    computed: {},
+    methods: {
+        logout: function logout() {
+            axios.post('/api/logout').then(function (response) {
+                localStorage.removeItem('access_token');
+                window.location.href = '/';
+            }).catch(function (error) {
+                window.location.href = '/';
+            });
         }
-    }).$mount('#app');
-    
-    */
-
-};
+    },
+    created: function created() {
+        this.checkIfLogged(false);
+    }
+}).$mount('#app');
 
 /***/ })
 
