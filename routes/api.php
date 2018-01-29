@@ -33,7 +33,7 @@ Route::post('activate', 'UserControllerAPI@activate'); //ACTIVATE NEW USER
 ADMIN ROUTES
  *****************/
 
-Route::middleware('auth:api', 'checkAdmin')->get('/settings', 'ConfigControllerAPI@getEmailSettings'); //RETURN's SETTINGS INFO
+Route::middleware('auth:api')->get('/settings', 'ConfigControllerAPI@getPlatformData'); //RETURN's SETTINGS INFO
 Route::middleware('auth:api', 'checkAdmin')->post('/settings/update', 'ConfigControllerAPI@update'); //UPDATE SETTINGS
 Route::middleware('auth:api', 'checkAdmin')->post('/user/email/update', 'UserControllerAPI@updateEmail'); //UPDATE ADMIN EMAIL
 Route::middleware('auth:api', 'checkAdmin')->post('users', 'UserControllerAPI@getUsers'); //GET LIST OF USERS TO MANAGE
