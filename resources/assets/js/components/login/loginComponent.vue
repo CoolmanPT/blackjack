@@ -1,18 +1,25 @@
 <template>
-    <div class="container">
+    <div class="container mb-3">
         <div class="row">
-            <div class="col-md-5 col-sm-12">
-                <div class="card ml-auto mr-auto mt-5">
+            <div class="col-sm-12">
+                <div class="jumbotron">
+                    <h1 class="text-center">BlackJack</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-sm-12">
+                <div class="card ml-auto mr-auto mt-3">
                     <div class="card-header bg-primary">
-                        <h1 class="text-center text-light">STATISTICS</h1>
+                        <h1 class="text-center text-light">Statistics</h1>
                     </div>
                     <div class="card-body">
-                        dsahdlasldksajdk
+                        <public-statistics-component></public-statistics-component>
                     </div>
                 </div>
             </div>
-            <div class="col-md-5 col-sm-12">
-                <div class="card ml-auto mr-auto mt-5">
+            <div class="col-md-4 col-sm-12">
+                <div class="card ml-auto mr-auto mt-3">
                     <div class="card-header bg-primary">
                         <h1 class="text-center text-light">Login</h1>
                     </div>
@@ -56,7 +63,10 @@
 </template>
 
 <script>
+    import PublicStatisticsComponent from "./publicStatisticsComponent";
+
     export default {
+        components: {PublicStatisticsComponent},
         data: function(){
             return {
                 username: '',

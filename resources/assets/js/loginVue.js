@@ -54,6 +54,7 @@ const resetPassword = Vue.component('password-reset-component', require('./compo
 const register = Vue.component('password-reset-component', require('./components/login/registerComponent.vue'));
 const activation = Vue.component('activation-component', require('./components/login/activationComponent.vue'));
 
+Vue.component('public-statistics-component', require('./components/login/publicStatisticsComponent.vue'));
 
 /*ROUTES*/
 const routes = [

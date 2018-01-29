@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use  HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +16,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'email', 'password', 'nickname', 'admin', 'blocked', 'reason_blocked', 'reason_blocked', 'reason_reactivated'
+        'id',
+        'name',
+        'email',
+        'password',
+        'nickname',
+        'admin',
+        'blocked',
+        'reason_blocked',
+        'reason_blocked',
+        'reason_reactivated'
     ];
 
     /**
@@ -27,4 +36,23 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function scopePlayer($query){
+        return $query->where('admin', 0);
+    }
+
+    public function gameLost(){
+        return $this->belongsToMany('App\Game', 'game_user', 'user_id','game_id')
+            ->wherePivot('game_result',3);
+    }
+
+    public function gameTies(){
+        return $this->belongsToMany('App\Game', 'game_user', 'user_id','game_id')
+            ->wherePivot('game_result',2);
+    }
+
+    public function gameWins(){
+        return $this->belongsToMany('App\Game', 'game_user', 'user_id','game_id')
+            ->wherePivot('game_result',1);
+    }
 }
