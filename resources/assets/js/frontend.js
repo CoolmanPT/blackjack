@@ -12,7 +12,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import VueRouter from 'vue-router';
-import VueSocketio from 'vue-socket.io';
+//import VueSocketio from 'vue-socket.io';
 
 Vue.use(VueRouter);
 //Vue.use(VueSocketio, 'http://127.0.0.1:8080');
@@ -24,8 +24,8 @@ const account = Vue.component('account-component', require('./components/fronten
 Vue.component('blackjack-component', require('./components/frontend/blackjackGameComponent.vue'));
 
 const routes = [
-    { path: '/', redirect: '/game' },
-    { path: '/game', component: gameLobby },
+    { path: '/', redirect: '/lobby' },
+    { path: '/lobby', component: gameLobby },
     { path: '/statistics', component: statistics },
     { path: '/account', component: account }
 ];

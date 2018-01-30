@@ -25,7 +25,10 @@ class User extends Authenticatable
         'blocked',
         'reason_blocked',
         'reason_blocked',
-        'reason_reactivated'
+        'reason_reactivated',
+        'total_points',
+        'total_games_played'
+
     ];
 
     /**
