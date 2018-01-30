@@ -85,6 +85,58 @@ class UserControllerAPI extends Controller
         }
     }
 
+    //UPDATE EMAIL
+    public function updateEmail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email'
+        ]);
+
+        if ($request->wantsJson() && !$validator->fails()) {
+            $checkEmailExists = User::where('id', '<>', $request->user()->id)
+                ->where('email', $request->input('email'))
+                ->first();
+
+            if ($checkEmailExists) {
+                return response()->json(
+                    ['errorCode' => 1, 'msg' => 'Email in Use.'], 400);
+            }
+            $request->user()->update($request->all());
+            return response()->json(['msg' => 'Email Saved.']);
+        } else {
+            return response()->json(['errorCode' => -1, 'msg' => 'Invalid Request.'], 400);
+        }
+    }
+
+    /**
+     * Update User Password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'currentPassword' => 'required',
+            'newPassword' => 'required'
+        ]);
+
+        if ($request->wantsJson() && !$validator->fails()) {
+
+
+            if (!Hash::check($request->input('currentPassword'), $request->user()->password)) {
+                return response()->json(
+                    ['errorCode' => 1, 'msg' => 'Password incorrecta.'], 400);
+            }
+
+            $request->user()->password = Hash::make($request->input('newPassword'));
+            $request->user()->save();
+
+            return response()->json(['msg' => 'Password alterada com sucesso.']);
+        } else {
+            return response()->json(['errorCode' => -1, 'msg' => 'Request inválido.'], 400);
+        }
+    }
     /**
      * Update User General Info.
      *
@@ -127,34 +179,6 @@ class UserControllerAPI extends Controller
             return response()->json(['message' => 'Request para alteração inválido.','error' => 1], 400);
         }
 
-    }
-
-    /**
-     * Update User Password.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function updatePassword(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'currentPassword' => 'required',
-            'newPassword' => 'required'
-        ]);
-
-        if ($request->wantsJson() && !$validator->fails()) {
-
-            if (!Hash::check($request->input('currentPassword'), $request->user()->password)) {
-                return response()->json(['message' => 'Password atual incorrecta.','error' => 2], 400);
-            }
-
-            $request->user()->password = Hash::make($request->input('newPassword'));
-            $request->user()->save();
-
-            return response()->json(['message' => 'Password foi atualizada com sucesso.'], 200);
-        } else {
-            return response()->json(['message' => 'Request para alteração inválido.','error' => 1], 400);
-        }
     }
 
     /**

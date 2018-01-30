@@ -1,9 +1,10 @@
-
+require('./bootstrap');
 window.Vue = require('vue');
 
 //IMPORT VUE VALIDATOR
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import axios from 'axios';
 
 Vue.use(VueRouter);
 
@@ -53,35 +54,41 @@ var isLoggedMixin = {
  DASHBOARD, SETTINGS, USERS AND PIECES COMPONENTS
  * **************************************/
 //DASHBOARD
-/*const dashboard = Vue.component('dashboard-component', require('./components/admin/dashboard.vue'));
-Vue.component('statistic-component', require('./components/admin/statistic.vue'));
-Vue.component('games-perday-component', require('./components/admin/games-perday-component.vue'));
-Vue.component('users-statistic-component', require('./components/admin/users_statistic.vue'));*/
+const dashboard = Vue.component('dashboard-component', require('./components/admin/adminDashboard.vue'));
+const settings = Vue.component('settings-component', require('./components/admin/settingsComponent.vue'));
+Vue.component('platform-email-settings-component', require('./components/admin/platform-email_settingsComponent.vue'));
+Vue.component('admin-change-email-component', require('./components/admin/admin-change_emailComponent.vue'));
+Vue.component('admin-change-password-component', require('./components/admin/admin-change_passwordComponent.vue'));
+
+
+
+//Vue.component('statistic-component', require('./components/admin/statistic.vue'));
+//Vue.component('games-perday-component', require('./components/admin/games-perday-component.vue'));
+//Vue.component('users-statistic-component', require('./components/admin/users_statistic.vue'));
 
 //SETTINGS COMPONENT
-/*const settings = Vue.component('settings-component', require('./components/admin/settings.vue'));
-Vue.component('email-settings-component', require('./components/admin/email_settings.vue'));
-Vue.component('change-email-component', require('./components/admin/change_email.vue'));
-Vue.component('change-password-component', require('./components/admin/change_password.vue'));*/
+
+
 
 //USER COMPONENT
-/*const users = Vue.component('users-component', require('./components/admin/users.vue'));*/
+//const users = Vue.component('users-component', require('./components/admin/users.vue'));
 
 
 
 //PIECES
-/*const pieces = Vue.component('pieces-component', require('./components/admin/pieces.vue'));
-Vue.component('pieces-upload', require('./components/admin/pieces_upload.vue'));*/
+//const pieces = Vue.component('pieces-component', require('./components/admin/pieces.vue'));
+//Vue.component('pieces-upload', require('./components/admin/pieces_upload.vue'));
 
 /*ROUTES*/
 
 
-/*const routes = [
-    { path: '/', redirect: '/dashboard' },
+const routes = [
+    { path: '/', redirect: 'dashboard' },
     { path: '/dashboard', component: dashboard },
-    { path: '/users', component: users },
-    { path: '/pieces', component: pieces },
     { path: '/settings', component: settings },
+    //{ path: '/users', component: users },
+    //{ path: '/pieces', component: pieces },
+
 ];
 
 const router = new VueRouter({
@@ -109,5 +116,5 @@ new Vue({
     created: function () {
         this.checkIfLogged(false);
     }
-}).$mount('#app');*/
+}).$mount('#admin_app');
 

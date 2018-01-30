@@ -19,9 +19,24 @@ define('CLIENT_SECRET','aiMp8FtN2gGMXHNjZGCJcaryefWBtly1zZtREJsT');
 class LoginControllerAPI extends Controller
 {
     use SendsPasswordResetEmails;
+
     //LOGIN METHOD + MAIL
     public function login(Request $request)
     {
+
+        //Search user by email or nickname
+        $user = User::orWhere('email', $request->email)->orWhere('nickname', $request->email)->first();
+        if(!$user){
+            return response()->json(['msg'=>'Utilizador/email não existe.'], 400);
+        }
+
+        if($user->activated == 0){
+            return response()->json(['msg'=>'Utilizador não activo.'], 400);
+        }
+
+        if($user->blocked == 1){
+            return response()->json(['msg'=>'Utilizador bloqueado.'], 400);
+        }
         $http = new \GuzzleHttp\Client;
         $response = $http->post(YOUR_SERVER_URL.'/oauth/token', [
             'form_params' => [

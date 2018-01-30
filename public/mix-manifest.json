@@ -1,6 +1,12 @@
 {
     "/js/loginVue.js": "/js/loginVue.js",
+<<<<<<< HEAD
     "/js/frontend.js": "/js/frontend.js",
     "/css/app.css": "/css/app.css",
     "/js/adminVue.js": "/js/adminVue.js"
+=======
+    "/js/adminVue.js": "/js/adminVue.js",
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css"
+>>>>>>> 5369ead1abe12eec13b55e05873f98c77f1890ff
 }
