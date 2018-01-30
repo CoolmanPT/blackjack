@@ -10,6 +10,9 @@ use App\Activation;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
+//use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UserStatistics;
+
 class UserControllerAPI extends Controller
 {
     //REGISTER A USER + MAIL

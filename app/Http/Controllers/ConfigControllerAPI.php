@@ -14,14 +14,14 @@ use App\Http\Resources\ConfigurationResource;
 class ConfigControllerAPI extends Controller
 {
     //Get Platform data
-        public function getPlatformData()
+    public function getPlatformData()
     {
         $config = DB::table('config')->first();
         return new ConfigurationResource($config);
     }
 
     //Update Platform Data
-        public function update(Request $request)
+    public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
