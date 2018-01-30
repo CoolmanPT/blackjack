@@ -1,7 +1,6 @@
 /node_modules
 /public/hot
 /public/storage
-/public/js
 /app/Http/Controllers/LoginControllerAPI.php
 /storage/*.key
 /vendor
