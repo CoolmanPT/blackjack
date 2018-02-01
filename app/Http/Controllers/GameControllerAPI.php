@@ -139,6 +139,12 @@ class GameControllerAPI extends Controller
                 case 1:
                     $game->status = 'active';
                     break;
+                case 2:
+                    $game->status = 'pending';
+                    break;
+                case 3:
+                    $game->status = 'terminated';
+                    break;
                 case 4:
                     $game->status = 'canceled';
                     break;

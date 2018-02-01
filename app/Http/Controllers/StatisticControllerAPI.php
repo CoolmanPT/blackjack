@@ -17,7 +17,7 @@ class StatisticControllerAPI extends Controller
     public function getPublicStatistics()
     {
         $totalPlayers = User::player()->count();
-        $totalGames = Game::terminated()->count();
+        $totalGames = Game::count();
 
         return response()->json(['totalPlayers' => $totalPlayers,'totalGames' => $totalGames]);
     }

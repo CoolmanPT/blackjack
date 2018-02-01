@@ -92,17 +92,21 @@ io.on('connection', function (socket) {
 
     socket.on('start_game', function (data) {
         let game = games.gameByID(data.gameID);
-	    game.forceStart();
-        io.to(game.gameID).emit('game_started_or_ended', game);
-        socket.broadcast.to(game.gameID).emit('play_game_round1',game);
-        socket.broadcast.to(game.gameID).emit('play_game_round1',game);
-        socket.broadcast.to(game.gameID).emit('start_game_round2',game);
+        if(game != null) {
+            game.forceStart();
+            io.to(game.gameID).emit('game_started_or_ended', game);
+            socket.broadcast.to(game.gameID).emit('play_game_round1',game);
+            socket.broadcast.to(game.gameID).emit('play_game_round1',game);
+            socket.broadcast.to(game.gameID).emit('start_game_round2',game);
+        }
     });
 
     socket.on('finish_game', function (data) {
         let game = games.gameByID(data.gameID);
-        game.finishGame();
-        io.to(game.gameID).emit('game_started_or_ended', game);
+        if(game != null) {
+            game.finishGame();
+            io.to(game.gameID).emit('game_started_or_ended', game);
+        }
     });
 
     socket.on('stand_game', function (data) {
@@ -115,14 +119,18 @@ io.on('connection', function (socket) {
 
     socket.on('start_game_round2', function (data) {
         let game = games.gameByID(data.gameID);
-        game.startRound2();
-        io.to(game.gameID).emit('game_changed', game);
+        if(game != null) {
+            game.startRound2();
+            io.to(game.gameID).emit('game_changed', game);
+        }
     });
 
     socket.on('start_game_round3', function (data) {
         let game = games.gameByID(data.gameID);
-        game.startRound3();
-        io.to(game.gameID).emit('game_changed', game);
+        if(game != null) {
+            game.startRound3();
+            io.to(game.gameID).emit('game_changed', game);
+        }
     });
 
     socket.on('play', function (data){
