@@ -2,17 +2,17 @@
     <div>
         <div class="container">
             <form id="search">
-                Search <input name="query" v-model="searchQuery" class="form-control">
+                Search <input name="query" v-model="searchQuery">
             </form>
             <div v-if="loading">
                 <h3>{{ message }}</h3>
             </div>
             <div v-else>
-                <div class="">
+                <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
-                        <tr class="">
-                            <th v-for="key in gridColumns" @click="sortBy(key)" :class="{ active: sortKey == key} ">
+                        <tr>
+                            <th v-for="key in gridColumns" @click="sortBy(key)" :class="{ active: sortKey == key }">
                                 {{ key | capitalize }}
                                 <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
                             </th>
@@ -38,7 +38,7 @@
                 sortKey: '',
                 sortOrders: {'nome':1,'email':1, 'username':1, 'jogos':1, 'vitorias':1, 'empates':1, 'derrotas':1},
                 searchQuery: '',
-                gridColumns: ['nome', 'email', 'username', 'jogos', 'vitorias', 'empates', 'derrotas', 'actionss'],
+                gridColumns: ['nome', 'email', 'username', 'jogos', 'vitorias', 'empates', 'derrotas'],
                 gridData: [],
                 loading: true,
                 message: 'Loading ... :<',
@@ -81,7 +81,6 @@
                 axios.post('api/allusersstatistics')
                     .then(response => {
                         this.gridData = response.data.data;
-
                         this.loading = false;
                     })
                     .catch(error => {

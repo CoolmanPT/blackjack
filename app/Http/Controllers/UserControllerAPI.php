@@ -1,19 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Resources\UserResource;
+
 use App\Mail\ActivateAccount;
 use Illuminate\Http\Request;
 use Validator;
 use App\User;
 use App\Activation;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Swift_Mailer;
-use Mail;
-use Illuminate\Support\Facades\App;
-use Illuminate\Mail\TransportManager;
-use App\Mail\ChangedState;
+use Illuminate\Support\Facades\Mail;
 
 //use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserStatistics;
@@ -55,26 +50,7 @@ class UserControllerAPI extends Controller
                 $activation->token = str_random(64);
                 $activation->save();
 
-                $config = DB::table('config')->first();
-                $mailConfigs = json_decode($config->platform_email_properties);
-
-                config([
-                   'mail.host' => $mailConfigs->host,
-                   'mail.port' => $mailConfigs->port,
-                   'mail.encryption' =>$mailConfigs->encryption,
-                   'mail.username' => $config->platform_email,
-                   'mail.password' => $mailConfigs->password
-                ]);
-
-
-                $app = App::getInstance();
-                $app->singleton('swift.transport', function ($app) {
-                    return new TransportManager($app);
-                });
-                $mailer = new Swift_Mailer($app['swift.transport']->driver());
-                Mail::setSwiftMailer($mailer);
-
-                Mail::to($user->email)->queue(new ActivateAccount($activation->token, $config->platform_email, $user->email));
+                Mail::to($user->email)->queue(new ActivateAccount($activation->token, $user->email));
 
                 return response()->json(['msg' => 'Utilizador registado.']);
             } catch (\Exception $e) {
@@ -241,138 +217,4 @@ class UserControllerAPI extends Controller
             return response()->json(['message' => 'Request inválido.'], 400);
         }
     }
-
-    //GET USERS
-    public function getUsers(Request $request)
-    {
-
-        if ($request->wantsJson()) {
-
-            $users = User::where('admin', 0)->get();
-            return UserResource::collection($users);
-        } else {
-            return response()->json(['msg' => 'Request inválido.'], 400);
-        }
-
-    }
-
-    //DELETE USER
-    public function delete($id, $reason)
-    {
-
-        try {
-
-            $user = User::findOrFail($id);
-
-            
-
-            
-            $msg = "Your account has been deleted! ";
-            if ($reason != null) {
-                $msg .= 'Reason:' .$reason;
-            }
-           $config = DB::table('config')->first();
-           $mailConfigs = json_decode($config->platform_email_properties);
-
-           config([
-              'mail.host' => $mailConfigs->host,
-              'mail.port' => $mailConfigs->port,
-              'mail.encryption' =>$mailConfigs->encryption,
-              'mail.username' => $config->platform_email,
-              'mail.password' => $mailConfigs->password
-           ]);
-
-
-           $app = App::getInstance();
-           $app->singleton('swift.transport', function ($app) {
-               return new TransportManager($app);
-           });
-           $mailer = new Swift_Mailer($app['swift.transport']->driver());
-           Mail::setSwiftMailer($mailer);
-
-
-            Mail::to($user->email)->queue(new ChangedState($msg, $config->platform_email, $user->email));
-
-            $user->delete();
-            return response()->json(null, 204);
-        } catch (\Exception $e) {
-            print_r($e);
-            exit();
-            return response()->json(['msg' => 'Problem sending email'], 400);
-        }
-
-    }
-
-    //UPDATE STATE
-    public function updateState(Request $request, $id)
-    {
-        if ($request->wantsJson()) {
-
-            try {
-
-                $user = User::findOrFail($id);
-
-                $oldState = $request->input('state');
-                
-                if ($oldState == 1) {
-                    $newState = 0;
-                } else {
-                    $newState = 1;
-                }
-
-                $reason = nl2br($request->input('reason'));
-                $user->blocked = $newState;
-                if ($newState == 0) {
-                    $msg = "Your account have been unblocked";
-                    $user->reason_reactivated = $reason;
-                } else {
-                    $msg = "Your account have been blocked.";
-                    $user->reason_blocked = $reason;
-                }
-
-                if ($reason != null) {
-                    $msg .= 'Reason: ' . $reason;
-                }
-
-                $config = DB::table('config')->first();
-                $mailConfigs = json_decode($config->platform_email_properties);
-                config([
-                    'mail.host' => $mailConfigs->host,
-                    'mail.port' => $mailConfigs->port,
-                    'mail.encryption' => $mailConfigs->encryption,
-                    'mail.username' => $config->platform_email,
-                    'mail.password' => $mailConfigs->password
-                ]);
-
-                $app = App::getInstance();
-                $app->singleton('swift.transport', function ($app) {
-                    return new TransportManager($app);
-                });
-                $mailer = new Swift_Mailer($app['swift.transport']->driver());
-                Mail::setSwiftMailer($mailer);
-
-                Mail::to($user->email)->queue(new ChangedState($msg, $config->platform_email, $user->email));
-
-                $user->save();
-                return response()->json(['msg' => 'State changed!']);
-            } catch (\Exception $e) {
-                print_r($e);
-                exit();
-                return response()->json(['msg' => 'Problem sending email.'], 400);
-            }
-        } else {
-            return response()->json(['msg' => 'Invalid Request.'], 400);
-        }
-
-        function getNewState($oldState) {
-        if (oldState == 1) {
-           return 0;
-        }
-        else {
-        return 1;
-        }
-    }
-    }
-
-    
 }

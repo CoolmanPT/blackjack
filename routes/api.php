@@ -130,3 +130,18 @@ Route::middleware('auth:api')->post('/user/password/update', 'UserControllerAPI@
 
 /** ______________________________________ */
 /** ________________ Game ________________ */
+
+//___ Set the Winner of the game ___________
+Route::middleware('auth:api', 'checkAdmin')->post('setwinner', 'GameControllerAPI@setWinner');
+
+//___ Set the Looser of the Game ___________
+Route::middleware('auth:api', 'checkAdmin')->post('setloser', 'GameControllerAPI@setLoser');
+
+//___ Set the Tied of the Game _____________
+Route::middleware('auth:api', 'checkAdmin')->post('settied', 'GameControllerAPI@setTied');
+
+//___ Change the status of the Game ________
+Route::middleware('auth:api', 'checkAdmin')->post('changestatus', 'GameControllerAPI@changeStatus');
+
+//___ Join User to a Game __________________
+Route::middleware('auth:api', 'checkAdmin')->post('joingame', 'GameControllerAPI@joinGame');

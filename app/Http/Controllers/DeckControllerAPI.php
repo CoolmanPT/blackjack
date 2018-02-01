@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DeckResourse;
 use Illuminate\Http\Request;
+
 use App\Deck;
-use App\Http\Resources\DeckResource;
-use Illuminate\Support\Facades\DB;
-use Validator;
-use Intervention\Image\Facades\Image;
 
 class DeckControllerAPI extends Controller
 {
-        //GET USERS
-    public function getDecks(Request $request)
-    {
-        if ($request->wantsJson()) {
+    /**
+     * Return a list Decks.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getDecks(Request $request){
+        if ($request->wantsJson()){
+            $decks = Deck::where('complete',1)->where('active',1)->get();
 
-            $decks = Deck::all();
-            return DeckResource::collection($decks);
-        } else {
-            return response()->json(['msg' => 'Invalid Request.'], 400);
+            return DeckResourse::collection($decks);
+        }else{
+            return response()->json(['message' => 'Request inválido.'], 400);
         }
     }
 
-        public function delete($id)
+    public function delete($id)
     {
 
         try {
@@ -40,12 +42,12 @@ class DeckControllerAPI extends Controller
 
     }
 
-      public function update(Request $request)
+    public function update(Request $request)
     {
-    	$id = $request->id;
-    	$name = $request->deckName;
+        $id = $request->id;
+        $name = $request->deckName;
         $image = $request->image;
-    	$exploded = explode(',', $image);
+        $exploded = explode(',', $image);
 
         $decoded = base64_decode($exploded[1]);
 
@@ -64,15 +66,15 @@ class DeckControllerAPI extends Controller
 
         file_put_contents($path, $decoded); //sas
 
-        
 
 
-	DB::table('decks')->where('id', $id)->update(['name' => $name, 'hidden_face_image_path' => 'img/'.$filename]);
-	return response()->json("Success", 200);
-        
+
+        DB::table('decks')->where('id', $id)->update(['name' => $name, 'hidden_face_image_path' => 'img/'.$filename]);
+        return response()->json("Success", 200);
+
     }
 
-        
+
     public function store(Request $request)
     {
         $exploded = explode(',', $request->image);
@@ -93,7 +95,7 @@ class DeckControllerAPI extends Controller
         file_put_contents($path, $decoded);
 
         $deck = Deck::create($request->except('image') + ['name' => $request->name, 'hidden_face_image_path' => 'img/'.$filename]);
-        
+
 
     }
 }

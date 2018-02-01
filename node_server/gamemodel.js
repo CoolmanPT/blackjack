@@ -2,62 +2,56 @@
 var MyConnection = require('./connection.js');
 
 class BlackJackGame {
-    constructor(ID, player1Name) {
+    constructor(ID, player1Name, date, deck) {
         this.gameID = ID;
         this.gameEnded = false;
         this.gameStarted = false;
+        this.gameRoundActive = false;
+        this.createdAt = date;
+        this.gameRound = 1;
+        this.roundPlayers = 0;
         //players
         this.players=[];
         this.players[0]=player1Name;
-        this.nPlayers = 4;
-        //
-        this.winners=[];
-        this.winner = 0;
+        this.playersSocketID=[];
         //for points
-        /*this.playersPoints=[];
-        this.playersPoints[0]=0;
-        this.playersPlaces=[];*/
+        this.playersPoints=[];
+        this.playerWinner = null;
+        this.playersTied = [];
         //cards
         this.deck = [];
-        this.card = [];
-        this.suits = '';
-        this.values = '';
+        this.suits = ['c', 'e', 'o', 'p'];
+        this.values = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
         this.hands = [];
-        this.hand = []; // to make hands. playerName, card1, card2, ...
-        this.drawAllowed = false;
-        this.handValue = 0;
-        //this.board = [0,0,0,0,0,0,0,0,0]; // dont need board
-        //?
-        this.playersSocketID=[];
-        this.mainDirectory="";
-        //?
-        //this.hiddenFace = "";
-        
-        //saber quantas peças ja foram viradas
-        /*
-        this.currentPlayerAux= 0;
-        this.pieceAux=[];
-        this.piecehistory=[];
-        this.moviments =0;*/
+        this.handsVisible = [];
+
+        this.deckDirectory = '/img/decks/'+deck+'/';
+
         this.getDeck();
         this.shuffleDeck();
     }
 
     join(playerName){
-        this.players[this.players.length]=playerName;
-        this.playersPoints[this.playersPoints.length]=0;
-        if(this.nPlayers == this.players.length){
+        this.players[this.players.length] = playerName;
+        this.playersPoints[this.playersPoints.length] = 0;
+        if(this.players.length === 4){
             this.gameStarted = true;
             conn.startGame(this.gameID);
         }
     }
 
     getDeck(){
-        this.suits = ['c', 'e', 'o', 'p'];
-        this.values = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
         for (let s = 0; s < this.suits.length; s++) {
             for (let v = 0; v < this.values.length; v++) {
-                this.card = [this.values[v], this.suits[s] + this.values[v] + '.png'];
+                var val=0;
+                if(v === 0){
+                    val=11;
+                }else if(v>0 && v<10){
+                    val = v+1;
+                }else{
+                    val = 10;
+                }
+                var card = {value: val, card: this.suits[s] + this.values[v]};
                 this.deck.push(card);
             }
         }
@@ -74,135 +68,145 @@ class BlackJackGame {
         }
         console.log('Fisher–Yates shuffle');
     }
-
-    firstDraw(){
-        console.log('Initial phase: Draw 2 cards in order')
-        for (let n = 0; n < this.players.length; n++) {
-            /*this.hand = [players[n], this.deck.slice(0, 1)];
-            this.deck.splice(0, 1);*/
-            //splice deve retirar a carta do topo do deck e meter na hand DEVE
-            let x = this.deck.slice(0, 1)
-            console.log(x[1] + ' para ' + this.players[n])
-
-            this.hand = [this.players[n], this.deck.splice(0, 1)];
-            this.hands.push(this.hand);
-        }
-        for (let m = 0; m < this.hands.length; m++){
-            //para a posiçao final do o array da mão da contagem, 
-            //adiciona outra carta que sai do fim do baralho
-            this.hands[m][this.hands[m].length] = this.deck.splice(0, 1);
-        }
-    }
     
-    drawFromDeck(playerName) {
-        //na net vi slice (extrai a informacao) mas fica lá no deck
-        //e splice extrai a info e remove do deck 
-        /*this.hand = [playerName, this.deck.slice(0, 1)];
-        this.deck.splice(0, 1);
-        this.hands.push(hand);*/
-        evaluateHand(playerName) //will change drawAllowed e handValue
-        //corre as mãos
-        for (let index = 0; index < this.hands.length; index++) {
-            //se a mão tiver o nome do argumento playerName e
-            //o tamanho do array for menor que 5 (nome + carta1 + 2 + 3 + 4)
-            if (this.hands[index][0] == playerName && this.hands[index].length < 5 && this.drawAllowed == true){
-                let x = this.deck.slice(0, 1)
-                console.log(x[1] + ' para ' + playerName)
+    drawFromDeck(socketID) {
+        this.handsVisible = [];
+        for(let i = 0; i < this.playersSocketID.length; i++){
+            if(this.hands[i].player==socketID){
+                if(this.hands[i].drawAllowed){
+                    this.hands[i].cards.push(this.deck.slice(0, 1));
+                    //console.log(this.hands[i]);
+                    this.playersPoints[i]+=this.deck[0].value;
 
-                this.hands[index][this.hands[m].length] = this.deck.splice(0, 1);
-                console.log('Cards left: ', this.deck.length)
+                    this.deck.splice(0, 1);
+
+                    if(this.playersPoints[i]===21){
+                        this.hands[i].drawAllowed=false;
+                    }
+                    this.handsVisible.push(this.hands[i]);
+                }
             }else{
-                console.log('Obter mais cartas não é permitido.')
-            }
-        }
-        //atualizar number of draws, tamanho do deck e historico 
-        
-        
-        /* codigo da net para um jogo de poker
-        if (this.hands.forEach) {
-            console.log('Number of draws: ', this.numberOfDraws)
-            if (this.numberOfDraws === 0) {
-                // Initial phase: Draw 5 cards.
-                
-                this.hand = this.deck.slice(0, cardsToDraw)
-                this.deck.splice(0, cardsToDraw)
-                
-                
-            } else {
-                if (this.discardsAllowed) {
-                    // Drawing phase: Replace discards with drawn cards
-                    console.log('Drawing phase: Replace discards with drawn cards')
-                    this.drawnCards = this.deck.slice(0, cardsToDraw)
-                    for (let i = 0; i < this.discards.length; i++) {
-                        this.hand[this.discards[i]] = this.drawnCards[i];
-                    }
-                    // Remove drawn cards from deck
-                    this.deck.splice(0, cardsToDraw)
-                    this.discards = []
-                    this.startOfHand = false
-                    this.betAllowed = false
-                    this.discardsAllowed = false
-                    console.log('Cards left: ', this.deck.length)
-                    this.numberOfDraws = this.numberOfDraws + 1
-                    this.evaluateHand()
-                }
-            }
-        }*/
-    }
-    evaluateHand(playerName) {
-        this.handValue = 0;
-        this.drawAllowed = true;
-        for (let index = 0; index < this.hands.length; index++) {
-            //se a mão tiver o nome do argumento playerName e
-            //o tamanho do array for menor que 5 (nome + carta1 + 2 + 3 + 4)
-            if (this.hands[index][0] == playerName){
-                for(let i = 1; i < this.hands[index].length; i++){
-                    this.card = this.hands[index][i];
-                    switch (this.card[0]) {
-                        case 1:
-                            this.handValue += 11;
-                            break; 
-                        case 2:
-                            this.handValue += 2;
-                            break; 
-                        case 3:
-                            this.handValue += 3;
-                            break; 
-                        case 4:
-                            this.handValue += 4;
-                            break; 
-                        case 5:
-                            this.handValue += 5;
-                            break; 
-                        case 6:
-                            this.handValue += 6;
-                            break; 
-                        case 7:
-                            this.handValue += 7;
-                            break; 
-                        case 8:
-                            this.handValue += 8;
-                            break; 
-                        case 9:
-                            this.handValue += 9;
-                            break; 
-                        case 10:
-                        case 11:
-                        case 12:
-                        case 13:
-                            this.handValue += 10;
-                            break; 
-                        default: 
-                            console.log('não devia de passar por aqui :^)');
-                    }
+                if(this.hands[i].cards.length === 1){
+                    this.handsVisible.push(
+                        {player: this.hands[i].player,
+                            cards: [this.hands[i].cards[0]],
+                            drawAllowed: this.hands[i].drawAllowed}
+                            );
+                }else if(this.hands[i].cards.length === 2){
+                    this.handsVisible.push(
+                        {player: this.hands[i].player,
+                            cards: [this.hands[i].cards[0],
+                                {value:0,card:'semFace'}],
+                            drawAllowed: this.hands[i].drawAllowed}
+                            );
+                }else if(this.hands[i].cards.length === 3){
+                    this.handsVisible.push(
+                        {player: this.hands[i].player,
+                            cards: [this.hands[i].cards[0],
+                                {value:0,card:'semFace'},
+                                {value:0,card:'semFace'}],
+                            drawAllowed: this.hands[i].drawAllowed}
+                    );
+                }else if(this.hands[i].cards.length === 4){
+                    this.handsVisible.push(
+                        {player: this.hands[i].player,
+                            cards: [this.hands[i].cards[0],
+                                {value:0,card:'semFace'},
+                                {value:0,card:'semFace'},
+                                {value:0,card:'semFace'}],
+                            drawAllowed: this.hands[i].drawAllowed}
+                    );
                 }
             }
         }
-        if(handValue >= 21){
-            this.drawAllowed = false;
+        if(this.gameRound <2){
+            this.roundPlayers--;
+
+            if(this.roundPlayers===0){
+                this.gameRoundActive=false;
+                return this.gameRound;
+            }
         }
-        console.log('Hand value is ' + this.handValue);
-        console.log('DrawAllowed: ' + this.drawAllowed);
+        return this.gameRound;
     }
+
+    startRound2(){
+        if(!this.gameRoundActive && this.gameRound === 1){
+            this.gameRoundActive = true;
+            this.gameRound=2;
+            this.roundPlayers++;
+        }
+    }
+
+    startRound3(){
+        if(!this.gameRoundActive && this.gameRound === 2){
+            this.gameRoundActive = true;
+            this.gameRound=3;
+            this.roundPlayers++;
+        }
+    }
+
+    standRound(id){
+        for(let i = 0; i < this.playersSocketID.length; i++){
+            if(this.playersSocketID[i] === id){
+                this.hands[i].drawAllowed=false;
+            }
+        }
+        this.roundPlayers--;
+
+        if(this.roundPlayers===0){
+            this.gameRoundActive=false;
+            return this.gameRound;
+        }
+        return this.gameRound;
+    }
+
+    forceStart(){
+        this.gameStarted=true;
+        conn.startGame(this.gameID);
+    }
+
+    finishGame(){
+        var pos,val = 0,counter=0;
+        for(let i = 0; i < this.playersPoints.length; i++){
+            if(this.playersPoints[i] > val && this.playersPoints[i] <= 21){
+                pos = i;
+                val = this.playersPoints[i];
+            }
+        }
+        for(let i = 0; i < this.playersPoints.length; i++){
+            if(this.playersPoints[i] === val && i !== pos){
+                counter++;
+                this.playersTied.push(this.playersSocketID[i]);
+                if(this.playersPoints[pos]===21){
+                    conn.setTie(this.gameID, this.players[i], 100);
+                }else{
+                    conn.setTie(this.gameID, this.players[i], 50);
+                }
+            }else{
+                conn.setLost(this.gameID, this.players[i], 0);
+            }
+        }
+        if(counter===0){
+            this.playerWinner = this.playersSocketID[pos];
+            if(this.playersPoints[pos]===21){
+                conn.setWin(this.gameID, this.players[pos],150);
+            }else{
+                conn.setWin(this.gameID, this.players[pos],100);
+            }
+        }else{
+            this.playersTied.push(this.playersSocketID[pos]);
+            if(this.playersPoints[pos]===21){
+                conn.setTie(this.gameID, this.players[pos], 100);
+            }else{
+                conn.setTie(this.gameID, this.players[pos], 50);
+            }
+        }
+        conn.gameTerminate(this.gameID);
+
+        this.gameStarted=false;
+        this.gameEnded=true;
+    }
+
 }
 module.exports = BlackJackGame;
