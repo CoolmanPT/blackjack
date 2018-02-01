@@ -22,17 +22,19 @@
                             <div v-cloak v-for="(hand, key1) of game.hands" v-if="key1==3" v-bind:key="key1">
                                 <div v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
-                                        <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
+                                        <div v-for="(card, key2) of hand.cards" v-bind:key="key2" class="d-inline">
                                             <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                            <div v-if="key2==0">
+                                            <div v-if="key2==0" class="d-inline">
                                                 <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                             </div>
                                             <div v-else>
-                                                <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                <div class="d-inline">
+                                                    <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -50,17 +52,19 @@
                             <div v-cloak v-for="(hand, key1) of game.hands" v-if="key1==2" v-bind:key="key1">
                                 <div v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
-                                        <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
+                                        <div v-for="(card, key2) of hand.cards" v-bind:key="key2" class="d-inline">
                                             <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                            <div v-if="key2==0">
+                                            <div v-if="key2==0" class="d-inline">
                                                 <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                             </div>
                                             <div v-else>
-                                                <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                <div class="d-inline">
+                                                    <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -76,17 +80,19 @@
                             <div v-cloak v-for="(hand, key1) of game.hands" v-if="key1==1" v-bind:key="key1">
                                 <div v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
-                                    <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
+                                    <div v-for="(card, key2) of hand.cards" v-bind:key="key2" class="d-inline">
                                         <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                     </div>
                                     </div>
                                     <div v-else>
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                            <div v-if="key2==0">
+                                            <div v-if="key2==0" class="d-inline">
                                                 <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                             </div>
                                             <div v-else>
-                                                <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                <div class="d-inline">
+                                                    <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -104,13 +110,13 @@
                             <div v-cloak v-for="(hand, key1) of game.hands" v-if="key1==0" v-bind:key="key1">
                                 <div  v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
-                                        <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
+                                        <div v-for="(card, key2) of hand.cards" v-bind:key="key2" class="d-inline">
                                             <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                            <div v-if="key2==0">
+                                            <div v-if="key2==0" class="d-inline">
                                                 <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                             </div>
                                             <div v-else>
@@ -171,7 +177,7 @@
                         if(this.game.playersTied.length > 0){
                             for(let i=0;  i < this.game.playersTied.length; i++){
                                 if(this.$parent.socketId == this.game.playersTied[i]){
-                                    this.alertType='alert-success';
+                                    this.alertType='alert-warning';
                                     return "You tied!!";
                                 }
                             }
@@ -239,7 +245,7 @@
                 }
                 this.$set(this.leftTime, this.game.gameID, this.leftTime[this.game.gameID]- 1);
 
-                console.log("Time: "+this.leftTime[this.game.gameID]);
+                //console.log("Time: "+this.leftTime[this.game.gameID]);
                 if(this.leftTime[this.game.gameID] == 0) {
                     //this.$parent.close(this.game);
                     console.log('End round '+this.round);

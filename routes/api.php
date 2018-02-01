@@ -46,12 +46,6 @@ Route::middleware('auth:api', 'checkAdmin')->post('/pieces', 'ImgControllerAPI@g
 Route::middleware('auth:api', 'checkAdmin')->delete('pieces/{id}', 'ImgControllerAPI@delete'); //DELETE PIECE
 Route::middleware('auth:api', 'checkAdmin')->post('pieces/store', 'ImgControllerAPI@store'); //ADD PIECE
 
-//ROTAS PARA O NODE.js
-Route::middleware('auth:api', 'checkAdmin')->post('setWinner', 'GameControllerAPI@setWinner'); //SET WINNER OF GAME
-Route::middleware('auth:api', 'checkAdmin')->post('changeStatus', 'GameControllerAPI@changeStatus'); //CHANGE STATUS OF GAME
-Route::middleware('auth:api', 'checkAdmin')->post('joinGame', 'GameControllerAPI@joinGame'); //JOIN USER TO GAME
-Route::middleware('auth:api', 'checkAdmin')->get('/game/pieces/{nimages}', 'ImgControllerAPI@getImagesForGame'); //UPDATE USER INFO
-
 
 /******************
 USER/ADMIN ROUTES

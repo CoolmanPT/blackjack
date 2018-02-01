@@ -107,8 +107,10 @@ io.on('connection', function (socket) {
 
     socket.on('stand_game', function (data) {
         let game = games.gameByID(data.gameID);
-        game.standRound(socket.id);
-        io.to(game.gameID).emit('game_changed', game);
+        if(game != null){
+            game.standRound(socket.id);
+            io.to(game.gameID).emit('game_changed', game);
+        }
     });
 
     socket.on('start_game_round2', function (data) {

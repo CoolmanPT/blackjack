@@ -175,10 +175,10 @@ class BlackJackGame {
             }
         }
         for(let i = 0; i < this.playersPoints.length; i++){
-            if(this.playersPoints[i] === val && i !== pos){
+            if(this.playersPoints[i] == val && i != pos){
                 counter++;
                 this.playersTied.push(this.playersSocketID[i]);
-                if(this.playersPoints[pos]===21){
+                if(this.playersPoints[pos]==21){
                     conn.setTie(this.gameID, this.players[i], 100);
                 }else{
                     conn.setTie(this.gameID, this.players[i], 50);
@@ -187,16 +187,16 @@ class BlackJackGame {
                 conn.setLost(this.gameID, this.players[i], 0);
             }
         }
-        if(counter===0){
+        if(counter==0){
             this.playerWinner = this.playersSocketID[pos];
-            if(this.playersPoints[pos]===21){
+            if(this.playersPoints[pos]==21){
                 conn.setWin(this.gameID, this.players[pos],150);
             }else{
                 conn.setWin(this.gameID, this.players[pos],100);
             }
         }else{
             this.playersTied.push(this.playersSocketID[pos]);
-            if(this.playersPoints[pos]===21){
+            if(this.playersPoints[pos]==21){
                 conn.setTie(this.gameID, this.players[pos], 100);
             }else{
                 conn.setTie(this.gameID, this.players[pos], 50);
@@ -204,7 +204,6 @@ class BlackJackGame {
         }
         conn.gameTerminate(this.gameID);
 
-        this.gameStarted=false;
         this.gameEnded=true;
     }
 
