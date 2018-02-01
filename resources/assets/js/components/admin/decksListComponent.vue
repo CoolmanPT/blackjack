@@ -10,7 +10,7 @@
             <thead>
             <tr>
                 <th class="bg-dark">Name</th>
-                <th class="bg-dark">Hidden face</th>
+                <th class="bg-dark">Path</th>
                 <th class="bg-dark">Active</th>
                 <th class="bg-dark">Complete</th>
                 <th class="bg-dark">Actions</th>
@@ -18,8 +18,9 @@
             </thead>
             <tbody>
             <tr v-for="deck in decks" :key="deck.id" :class="">
+
                 <td>{{ deck.name }}</td>
-                <td><img :src="deck.hidden_face_image_path"></td>
+                <td><img :src="deck.hiddenFaceImagePath"></td>
                 <td>{{ deck.active }}</td>
                 <td>{{ deck.complete }}</td>
                 <td>
@@ -120,7 +121,6 @@
                 var fileReader = new window.FileReader();
                 fileReader.readAsDataURL(e.target.files[0]);
                 fileReader.onload = (e) => {this.image = e.target.result};
-                console.log(this);
 
             },
             createImage(file) {
@@ -144,7 +144,7 @@
                         name: this.name,
                         image: this.image,
                     };
-                    console.log(data);
+
                     axios.post('/api/decks/store', data)
                         .then((response) => {
                         this.success = true;

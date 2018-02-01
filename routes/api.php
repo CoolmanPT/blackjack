@@ -25,53 +25,46 @@ Route::middleware('auth:api')->post('logout','LoginControllerAPI@logout');
 Route::post('password/email', 'LoginControllerAPI@sendResetLinkEmail');
 Route::post('password/reset', 'LoginControllerAPI@resetPassword');
 
-Route::post('register', 'UserControllerAPI@store'); //REGISTER NEW USER
-Route::post('activate', 'UserControllerAPI@activate'); //ACTIVATE NEW USER
+Route::post('register', 'UserControllerAPI@store');
+Route::post('activate', 'UserControllerAPI@activate');
 
 
 /******************
 ADMIN ROUTES
  *****************/
 
-Route::middleware('auth:api', 'checkAdmin')->get('/settings', 'ConfigControllerAPI@getPlatformData'); //RETURN's SETTINGS INFO
-Route::middleware('auth:api', 'checkAdmin')->post('/settings/update', 'ConfigControllerAPI@update'); //UPDATE SETTINGS
-Route::middleware('auth:api', 'checkAdmin')->post('/user/email/update', 'UserControllerAPI@updateEmail'); //UPDATE ADMIN EMAIL
-Route::middleware('auth:api', 'checkAdmin')->get('users', 'UserControllerAPI@getUsers'); //GET LIST OF USERS TO MANAGE
-Route::middleware('auth:api', 'checkAdmin')->delete('users/{id}/{reason?}', 'UserControllerAPI@delete'); //DELETE USER
-Route::middleware('auth:api', 'checkAdmin')->put('users/{id}', 'UserControllerAPI@updateState'); //CHANGE STATE USER
-Route::middleware('auth:api', 'checkAdmin')->get('/statistic', 'StatisticAPI@getStatistic'); //RETURN's STATISTIC INFO
-Route::middleware('auth:api', 'checkAdmin')->post('/gamesPerDay', 'StatisticAPI@getGamesPerDate'); //RETURN's GAMES PER DAY BETWEEN TWO DATES
-Route::middleware('auth:api', 'checkAdmin')->post('/usersStatistic', 'UserControllerAPI@getUsersStatistic'); //RETURN's GAMES PER DAY BETWEEN TWO DATES
+Route::middleware('auth:api', 'checkAdmin')->get('/settings', 'ConfigControllerAPI@getPlatformData');
+Route::middleware('auth:api', 'checkAdmin')->post('/settings/update', 'ConfigControllerAPI@update');
+Route::middleware('auth:api', 'checkAdmin')->post('/user/email/update', 'UserControllerAPI@updateEmail');
+Route::middleware('auth:api', 'checkAdmin')->get('users', 'UserControllerAPI@getUsers');
+Route::middleware('auth:api', 'checkAdmin')->delete('users/{id}/{reason?}', 'UserControllerAPI@delete');
+Route::middleware('auth:api', 'checkAdmin')->put('users/{id}', 'UserControllerAPI@updateState');
+Route::middleware('auth:api', 'checkAdmin')->get('/statistic', 'StatisticAPI@getStatistic');
+Route::middleware('auth:api', 'checkAdmin')->post('/gamesPerDay', 'StatisticAPI@getGamesPerDate');
+Route::middleware('auth:api', 'checkAdmin')->post('/usersStatistic', 'UserControllerAPI@getUsersStatistic');
 
-Route::middleware('auth:api', 'checkAdmin')->get('/decks', 'DeckControllerAPI@getDecks'); //RETURN's DECK
-Route::middleware('auth:api', 'checkAdmin')->delete('decks/{id}', 'DeckControllerAPI@delete'); //DELETE DECK
-Route::middleware('auth:api', 'checkAdmin')->post('decks/store', 'DeckControllerAPI@store'); //ADD DECK
-Route::middleware('auth:api', 'checkAdmin')->post('decks/update', 'DeckControllerAPI@update'); //UPDATE DECK
-Route::middleware('auth:api', 'checkAdmin')->post('decks/addCard', 'DeckControllerAPI@update'); //UPDATE DECK
-
-
-//ROTAS PARA O NODE.js
-Route::middleware('auth:api', 'checkAdmin')->post('setWinner', 'GameControllerAPI@setWinner'); //SET WINNER OF GAME
-Route::middleware('auth:api', 'checkAdmin')->post('changeStatus', 'GameControllerAPI@changeStatus'); //CHANGE STATUS OF GAME
-Route::middleware('auth:api', 'checkAdmin')->post('joinGame', 'GameControllerAPI@joinGame'); //JOIN USER TO GAME
-Route::middleware('auth:api', 'checkAdmin')->get('/game/pieces/{nimages}', 'ImgControllerAPI@getImagesForGame'); //UPDATE USER INFO
+Route::middleware('auth:api', 'checkAdmin')->get('/decks', 'DeckControllerAPI@getDecks');
+Route::middleware('auth:api', 'checkAdmin')->delete('decks/{id}', 'DeckControllerAPI@delete');
+Route::middleware('auth:api', 'checkAdmin')->post('decks/store', 'DeckControllerAPI@store');
+Route::middleware('auth:api', 'checkAdmin')->post('decks/update', 'DeckControllerAPI@update');
+Route::middleware('auth:api', 'checkAdmin')->post('decks/addCard', 'DeckControllerAPI@update');
 
 /******************
 USER ROUTES
  *****************/
-Route::middleware('auth:api', 'checkPlayer')->get('getnewuser/{id}', 'GameControllerAPI@getuser'); //CREATE GAME
-Route::middleware('auth:api', 'checkPlayer')->post('createGame', 'GameControllerAPI@store'); //CREATE GAME
+Route::middleware('auth:api', 'checkPlayer')->get('getnewuser/{id}', 'GameControllerAPI@getuser');
+Route::middleware('auth:api', 'checkPlayer')->post('createGame', 'GameControllerAPI@store');
 Route::middleware('auth:api', 'checkPlayer')->delete('deleteOwnAccount', 'UserControllerAPI@deleteOwnAccount');
-Route::middleware('auth:api', 'checkPlayer')->post('statisticOfUser', 'StatisticAPI@getStatisticOfUser'); //GET STATISTIC OF USER
-Route::middleware('auth:api', 'checkPlayer')->post('/user/update', 'UserControllerAPI@update'); //UPDATE USER INFO
-Route::middleware('auth:api', 'checkPlayer')->get('/game/countPieces', 'ImgControllerAPI@getImagesCount'); //RETURN NUMBER OF IMAGES TO GAME
+Route::middleware('auth:api', 'checkPlayer')->post('statisticOfUser', 'StatisticAPI@getStatisticOfUser');
+Route::middleware('auth:api', 'checkPlayer')->post('/user/update', 'UserControllerAPI@update');
+Route::middleware('auth:api', 'checkPlayer')->get('/game/countPieces', 'ImgControllerAPI@getImagesCount');
 
 /******************
 USER/ADMIN ROUTES
  *****************/
 
-Route::middleware('auth:api')->post('/user/password/update', 'UserControllerAPI@updatePassword'); //UPDATE PASSWORD
-Route::middleware('auth:api')->post('/user/avatar/update', 'UserControllerAPI@updateAvatar'); //UPDATE AVATAR
+Route::middleware('auth:api')->post('/user/password/update', 'UserControllerAPI@updatePassword');
+Route::middleware('auth:api')->post('/user/avatar/update', 'UserControllerAPI@updateAvatar');
 
 
 
@@ -116,7 +109,7 @@ Route::middleware('auth:api', 'checkAdmin')->post('totalgamesperdate', 'Statisti
 Route::middleware('auth:api', 'checkPlayer')->post('/user/update', 'UserControllerAPI@update');
 
 //___ Delete User Account __________________
-//Route::middleware('auth:api', 'checkPlayer')->delete('/user/deleteaccount', 'UserControllerAPI@deleteAccount');
+Route::middleware('auth:api', 'checkPlayer')->delete('/user/deleteaccount', 'UserControllerAPI@deleteAccount');
 
 
 

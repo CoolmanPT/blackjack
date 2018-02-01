@@ -6,6 +6,8 @@ use App\Http\Resources\DeckResourse;
 use Illuminate\Http\Request;
 
 use App\Deck;
+use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 
 class DeckControllerAPI extends Controller
 {
@@ -47,6 +49,8 @@ class DeckControllerAPI extends Controller
         $id = $request->id;
         $name = $request->deckName;
         $image = $request->image;
+        Image::make($image)->resize(100, 75)->save($image);
+/*
         $exploded = explode(',', $image);
 
         $decoded = base64_decode($exploded[1]);
@@ -67,7 +71,7 @@ class DeckControllerAPI extends Controller
         file_put_contents($path, $decoded); //sas
 
 
-
+*/
 
         DB::table('decks')->where('id', $id)->update(['name' => $name, 'hidden_face_image_path' => 'img/'.$filename]);
         return response()->json("Success", 200);
