@@ -23,16 +23,16 @@
                                 <div v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                            <img class="card" v-bind:src="pieceImageURL(key1,key2)">
+                                            <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
                                             <div v-if="key2==0">
-                                                <img class="card" v-bind:src="pieceImageURL(key1,key2)">
+                                                <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                             </div>
                                             <div v-else>
-                                                <img class="card" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
                                             </div>
                                         </div>
                                     </div>
@@ -51,16 +51,16 @@
                                 <div v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                            <img class="card" v-bind:src="pieceImageURL(key1,key2)">
+                                            <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
                                             <div v-if="key2==0">
-                                                <img class="card" v-bind:src="pieceImageURL(key1,key2)">
+                                                <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                             </div>
                                             <div v-else>
-                                                <img class="card" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
                                             </div>
                                         </div>
                                     </div>
@@ -77,21 +77,21 @@
                                 <div v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
                                     <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                        <img class="card" v-bind:src="pieceImageURL(key1,key2)">
+                                        <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                     </div>
                                     </div>
-                                        <div v-else>
-                                            <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                                <div v-if="key2==0">
-                                                    <img class="card" v-bind:src="pieceImageURL(key1,key2)">
-                                                </div>
-                                                <div v-else>
-                                                    <img class="card" v-bind:src="game.deckDirectory + 'semFace.png'">
-                                                </div>
+                                    <div v-else>
+                                        <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
+                                            <div v-if="key2==0">
+                                                <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
+                                            </div>
+                                            <div v-else>
+                                                <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
                                             </div>
                                         </div>
-                                        <p :class="{imHere: verifyPlayerCurrent(hand.player)}">{{game.players[key1]}}</p>
                                     </div>
+                                    <p :class="{imHere: verifyPlayerCurrent(hand.player)}">{{game.players[key1]}}</p>
+                                </div>
                             </div>
 
                         </div>
@@ -105,16 +105,16 @@
                                 <div  v-if="hand.cards.length>0">
                                     <div v-if="verifyPlayerCurrent(hand.player) || game.gameEnded">
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
-                                            <img class="card" v-bind:src="pieceImageURL(key1,key2)">
+                                            <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div v-for="(card, key2) of hand.cards" v-bind:key="key2">
                                             <div v-if="key2==0">
-                                                <img class="card" v-bind:src="pieceImageURL(key1,key2)">
+                                                <img class="gameCard" v-bind:src="pieceImageURL(key1,key2)">
                                             </div>
                                             <div v-else>
-                                                <img class="card" v-bind:src="game.deckDirectory + 'semFace.png'">
+                                                <img class="gameCard" v-bind:src="game.deckDirectory + 'semFace.png'">
                                             </div>
                                         </div>
                                     </div>
