@@ -1,37 +1,37 @@
 <template>
     <div>
-        <div class="container-fluid">
-        <ul class="nav nav-tabs" id="my" role="tablist">
-            <li class="nav-item active">
-                <a class="nav-link" id="list-tab" data-toggle="tab" href="#listtab" role="tab" aria-controls="listtab" aria-selected="false">Game Lobby</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="my-tab" data-toggle="tab" href="#mytab" role="tab" aria-controls="mytab" aria-selected="true">My Games</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myContent">
-            <div class="tab-pane fade in active" id="mytab" role="tabpanel" aria-labelledby="my-tab">
-                <h3>New Game:</h3>
-                <button class="btn btn-xs btn-success" v-on:click.prevent="createGame">Create a New Game</button>
-                <div class="alert alert-info" v-if="message!=''">
-                    <strong>{{ message }}</strong>
+        <div class="container">
+            <ul class="nav nav-tabs nav-fill mt-5" id="my" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="list-tab" data-toggle="tab" href="#listtab" role="tab" aria-controls="listtab" aria-selected="true">Game Lobby</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="my-tab" data-toggle="tab" href="#mytab" role="tab" aria-controls="mytab" aria-selected="false">My Games</a>
+                </li>
+            </ul>
+            <div class="tab-content border border-top-0 pt-3" id="myContent">
+                <div class="tab-pane fade" id="mytab" role="tabpanel" aria-labelledby="my-tab">
+                    <h3>New Game:</h3>
+                    <button class="btn btn-xs btn-success" v-on:click.prevent="createGame">Create a New Game</button>
+                    <div class="alert alert-info" v-if="message!=''">
+                        <strong>{{ message }}</strong>
+                    </div>
+                    <hr>
+                    <div v-if="activeGames.length == 0">
+                        <h3 class="text-center">No joined games... yet!</h3>
+                    </div>
+                    <template v-for="game in activeGames">
+                        <blackjack ref="gameRef" :game="game"></blackjack>
+                    </template>
                 </div>
-                <hr>
-                <div v-if="activeGames.length == 0">
-                    <h3 class="text-center">No games yet...</h3>
+                <div class="tab-pane fade show active" id="listtab" role="tabpanel" aria-labelledby="list-tab">
+                    <h4>Pending games: </h4>
+                    <list-games :gameJoinSuccess="joinGameSuccess" :games="lobbyGames" @join-click="joinGame"></list-games>
+                    <div v-if="lobbyGames.length == 0">
+                        <h3 class="text-center">Waiting for games to be created...</h3>
+                    </div>
                 </div>
-                <template v-for="game in activeGames">
-                    <blackjack :game="game"></blackjack>
-                </template>
             </div>
-            <div class="tab-pane fade" id="listtab" role="tabpanel" aria-labelledby="list-tab">
-                <h4>Pending games: </h4>
-                <list-games :games="lobbyGames" @join-click="join"></list-games>
-                <div v-if="lobbyGames.length == 0">
-                    <h3 class="text-center">Waiting for games...</h3>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 </template>
@@ -41,7 +41,6 @@
 
     export default {
         data: function(){
-            console.log(this.$root.$data.nameOfUser);
             return {
                 currentPlayer: '',
                 lobbyGames: [],
@@ -49,7 +48,9 @@
                 socketId: "",
                 nPlayers: 1,
                 newPlayer: "",
-                message:''
+                message:'',
+                deck: {},
+                joinGameSuccess: true,
             }
         },
         sockets:{
@@ -57,17 +58,16 @@
                 console.log('socket connected');
                 this.socketId = this.$socket.id;
             },
-            discconnect: function (){
+            disconnect: function (){
                 console.log('socket disconnected');
                 this.socketId = "";
             },
             lobby_changed: function (){
-                // For this to work, websocket server must emit a message
-                // named "lobby_changed"
                 this.loadLobby();
             },
             my_active_games_changed: function (){
                 this.loadActiveGames();
+                this.joinGameSuccess = true;
             },
             my_activegames: function (games){
                 this.activeGames = games;
@@ -75,7 +75,8 @@
             my_lobbygames: function (games){
                 this.lobbyGames = games;
             },
-            game_changed: function (game){
+            game_started_or_ended: function (game){
+                console.log(game);
                 for (var lobbyGame of this.lobbyGames){
                     if(game.gameID == lobbyGame.gameID){
                         Object.assign(lobbyGame, game);
@@ -88,85 +89,99 @@
                         break;
                     }
                 }
+                console.log('game started or ended');
+            },
+            game_changed: function (game){
+                for(var activeGame of this.activeGames){
+                    if(game.gameID == activeGame.gameID){
+                        Object.assign(activeGame, game);
+                        break;
+                    }
+                }
+            },
+            join_game_failed: function(){
+                this.joinGameFailed();
+            },
+            play_game_round1: function(game){
+                this.play(game);
+            },
+            start_game_round2: function(game){
+                for (var children of this.$children){
+                    console.log(children.id+' ,,,, '+game.gameID);
+                    if(children.id==game.gameID){
+                        children.startNextRound();
+                    }
+                }
             }
         },
         methods: {
-            playerInfo: function () {
-                axios.get('/api/user')
-                    .then((response) => {
-                        this.currentPlayer = response.data.nickname;
-                    })
-                    .catch((error) => {
+            getDeck: function(){
+                axios.post('/api/deck')
+                    .then(response => {
+                        var i, decks = response.data.data;
+                        //if(decks.length == 0){
+                            // para testes sem decks na BD
+                            this.deck = {id: 1, name:'default', hiddenFaceImagePath: ''};
+                            //return;
+                        //}else{
+                        //    i = Math.floor(Math.random() * decks.length--);
+                        //    this.deck = decks[i];
+                        //}
                     });
             },
-            getSizeRange: function () {
-                axios.get('/api/game/countPieces')
-                    .then((response) => {
-                        console.log("Range: "+response.data.range);
-                        this.range = response.data.range;
-                    })
-                    .catch((error) => {
-                        console.log("Error range: ");
+            getPlayer: function () {
+                axios.get('/api/user')
+                    .then(response => {
+                        this.currentPlayer = response.data.nickname;
                     });
             },
             loadLobby: function (){
-                // send message to server to load the list of games on the lobby
                 this.$socket.emit('get_my_lobbygames');
             },
             loadActiveGames: function (){
-                // send message to server to load the list of games that player is playing
                 this.$socket.emit('get_my_activegames');
-            },
-            getPlayers: function () {
-                axios.get('api/getnewuser/' + document.getElementById("newuser").value)
-                    .then((response) => {
-                        this.newPlayer = response.data.msg;
-                    })
-                    .catch((error) => {
-                        console.log("Erro:");
-                    });
             },
             createGame: function (){       
                 if (this.currentPlayer == "") {
                     this.message = "Cannot create a game because logged user name is null.";
                     return;
-                }
-                //TODO:
-                else {
-                    axios.post('/api/createGame')
-                        .then((response) => {
-                            console.log("createGame:" + response.data.msg + "Gameid: " + response.data.id);
-                            this.$socket.emit('create_game', { playerName: this.currentPlayer, gameID: response.data.id,});
+                } else {
+                    axios.post('/api/creategame',{deckId: this.deck.id})
+                        .then(response => {
+                            console.log("createGame:" + response.data.message + "Gameid: " + response.data.id);
+                            this.$socket.emit('create_game', {playerName: this.currentPlayer,
+                                                            gameID: response.data.id,
+                                                            gameDate: response.data.date,
+                                                            gameDeck: this.deck.name});
                         })
-                        .catch((error) => {
-                            this.message="Erro ao criar jogo!";
-                            // console.log("Erro: createGame: "+error.response.data.msg);
+                        .catch(error => {
+                            this.message="Erro ao criar jogo! " + error.response.data.message;
                         });
                 }
             },
-            join: function (game){
-                // Click to join game
+            joinGame: function (game){
                 for (var player of game.players){
                     if(player == this.currentPlayer){
-                        this.message="You are not able to join because your name is already in use!";
-                        setTimeout(this.cleanMyMessages, 5000);
+                        this.message="You can't join a game where you are already playing!";
+                        setTimeout(this.cleanMessages, 5000);
                         return;
                     }
                 }
                 this.$socket.emit('join_game', {gameID: game.gameID, playerName: this.currentPlayer});
             },
-            cleanMyMessages: function (){
+            cleanMessages: function (){
                 this.message='';
             },
-            play: function (game, index){
-                // play a game - click on piece on specified index
-                this.$socket.emit('play', {gameID: game.gameID, index: index});
+            play: function (game){
+                this.$socket.emit('play', {gameID: game.gameID});
             },
-            forceStart: function (game){
-              this.$socket.emit('force_start', {gameID: game.gameID});
+            startGame: function (game){
+                this.$socket.emit('start_game', {gameID: game.gameID});
+            },
+            finish: function(game){
+                this.$socket.emit('finish_game', {gameID: game.gameID});
             },
             close: function (game){
-                // to close a game if is the last game
                 if(game.players.length == 1){
                     for(var i=0; i < this.activeGames.length; i++){
                         if(game.gameID == this.activeGames[i].gameID){
@@ -176,7 +191,25 @@
                     }
                 }
                 this.$socket.emit('close_game', {gameID: game.gameID});
-            }
+            },
+            remove: function(game){
+                this.$socket.emit('remove_game', {gameID: game.gameID});
+            },
+            standGame: function(game){
+                this.$socket.emit('stand_game',{gameID: game.gameID});
+            },
+            startGameRound2: function(game){
+                this.$socket.emit('start_game_round2',{gameID: game.gameID});
+            },
+            startGameRound3: function(game){
+                this.$socket.emit('start_game_round3',{gameID: game.gameID});
+            },
+            joinGameFailed: function(){
+                this.message="Failed to join the game.";
+                this.joinGameSuccess = false;
+                setTimeout(this.cleanMessages, 5000);
+                this.loadLobby();
+            },
         },
         components: {
             'list-games': ListGames,
@@ -184,22 +217,15 @@
         },
         mounted: function () {
             this.loadLobby();
-            this.playerInfo();
-            this.getSizeRange();
+            this.getPlayer();
+            this.getDeck();
+            this.loadActiveGames();
         },
         beforeMount: function (){
             this.loadLobby();
+            this.loadActiveGames();
         }
 
     }
 </script>
-
-<style>
-    input.matrixSize{
-        width: 25px;
-    }
-    .invalidMatrixSize{
-        width: 402px;
-    }
-</style>
 

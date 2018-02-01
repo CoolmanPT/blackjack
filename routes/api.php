@@ -52,15 +52,6 @@ Route::middleware('auth:api', 'checkAdmin')->post('changeStatus', 'GameControlle
 Route::middleware('auth:api', 'checkAdmin')->post('joinGame', 'GameControllerAPI@joinGame'); //JOIN USER TO GAME
 Route::middleware('auth:api', 'checkAdmin')->get('/game/pieces/{nimages}', 'ImgControllerAPI@getImagesForGame'); //UPDATE USER INFO
 
-/******************
-USER ROUTES
- *****************/
-Route::middleware('auth:api', 'checkPlayer')->get('getnewuser/{id}', 'GameControllerAPI@getuser'); //CREATE GAME
-Route::middleware('auth:api', 'checkPlayer')->post('createGame', 'GameControllerAPI@store'); //CREATE GAME
-Route::middleware('auth:api', 'checkPlayer')->delete('deleteOwnAccount', 'UserControllerAPI@deleteOwnAccount');
-Route::middleware('auth:api', 'checkPlayer')->post('statisticOfUser', 'StatisticAPI@getStatisticOfUser'); //GET STATISTIC OF USER
-Route::middleware('auth:api', 'checkPlayer')->post('/user/update', 'UserControllerAPI@update'); //UPDATE USER INFO
-Route::middleware('auth:api', 'checkPlayer')->get('/game/countPieces', 'ImgControllerAPI@getImagesCount'); //RETURN NUMBER OF IMAGES TO GAME
 
 /******************
 USER/ADMIN ROUTES
@@ -114,7 +105,8 @@ Route::middleware('auth:api', 'checkPlayer')->post('/user/update', 'UserControll
 //___ Delete User Account __________________
 Route::middleware('auth:api', 'checkPlayer')->delete('/user/deleteaccount', 'UserControllerAPI@deleteAccount');
 
-
+//___ Create a new Game ____________________
+Route::middleware('auth:api', 'checkPlayer')->post('creategame', 'GameControllerAPI@store');
 
 /** ______________________________________ */
 /** ________________ Mix _________________ */
@@ -122,7 +114,25 @@ Route::middleware('auth:api', 'checkPlayer')->delete('/user/deleteaccount', 'Use
 //___ Update User or Admin Password ________
 Route::middleware('auth:api')->post('/user/password/update', 'UserControllerAPI@updatePassword');
 
+//___ Join User to a Game __________________
+Route::middleware('auth:api','checkPlayer')->post('deck', 'DeckControllerAPI@getDecks');
+
 
 
 /** ______________________________________ */
 /** ________________ Game ________________ */
+
+//___ Set the Winner of the game ___________
+Route::middleware('auth:api', 'checkAdmin')->post('setwinner', 'GameControllerAPI@setWinner');
+
+//___ Set the Looser of the Game ___________
+Route::middleware('auth:api', 'checkAdmin')->post('setloser', 'GameControllerAPI@setLoser');
+
+//___ Set the Tied of the Game _____________
+Route::middleware('auth:api', 'checkAdmin')->post('settied', 'GameControllerAPI@setTied');
+
+//___ Change the status of the Game ________
+Route::middleware('auth:api', 'checkAdmin')->post('changestatus', 'GameControllerAPI@changeStatus');
+
+//___ Join User to a Game __________________
+Route::middleware('auth:api', 'checkAdmin')->post('joingame', 'GameControllerAPI@joinGame');

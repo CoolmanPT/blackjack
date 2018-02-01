@@ -1,6 +1,6 @@
 {
     "/js/adminVue.js": "/js/adminVue.js",
+    "/js/loginVue.js": "/js/loginVue.js",
     "/js/frontend.js": "/js/frontend.js",
-    "/css/app.css": "/css/app.css",
-    "/js/loginVue.js": "/js/loginVue.js"
+    "/css/app.css": "/css/app.css"
 }

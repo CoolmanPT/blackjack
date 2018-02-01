@@ -46,16 +46,21 @@ class User extends Authenticatable
 
     public function gameLost(){
         return $this->belongsToMany('App\Game', 'game_user', 'user_id','game_id')
-            ->wherePivot('game_result',3);
+            ->wherePivot('game_result','lost');
     }
 
     public function gameTies(){
         return $this->belongsToMany('App\Game', 'game_user', 'user_id','game_id')
-            ->wherePivot('game_result',2);
+            ->wherePivot('game_result','tie');
     }
 
     public function gameWins(){
         return $this->belongsToMany('App\Game', 'game_user', 'user_id','game_id')
-            ->wherePivot('game_result',1);
+            ->wherePivot('game_result','win');
+    }
+
+    public function games(){
+        return $this->belongsToMany('App\Game', 'game_user', 'user_id','game_id')
+            ->wherePivot('game_result','pending');
     }
 }

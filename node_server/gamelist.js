@@ -3,7 +3,6 @@ var Mygame = require('./gamemodel.js');
 
 class GameList {
     constructor() {
-        //this.contadorID = 0;
         this.games = new Map();
     }
 
@@ -12,15 +11,13 @@ class GameList {
         return game;
     }
 
-    createGame(playerName, socketID, nPlayers, gameID) {
+    createGame(playerName, socketID, gameID, gameDate, deck) {
         console.log("New game: "+gameID+" created by "+ playerName);
-        var game = new Mygame(gameID, playerName, nPlayers);
+        var game = new Mygame(gameID, playerName, gameDate, deck);
         game.playersSocketID[0] = socketID;
-        game.playersPlaces[0] = socketID;
-        if(nPlayers == 1){
-            game.gameStarted = true;
-            //conn.startGame(game.gameID);
-        }
+        game.playersPoints[0]=0;
+        game.hands[0] = {player: socketID, cards: [], drawAllowed: true};
+        //game.roundPlayers+=1;
         this.games.set(game.gameID, game);
         return game;
     }
@@ -33,11 +30,11 @@ class GameList {
         game.join(playerName);
         conn.joinGame(playerName, gameID);
         game.playersSocketID[game.playersSocketID.length] = socketID;
-        game.playersPlaces[game.playersPlaces.length] = socketID;
+        game.hands[game.hands.length] = {player: socketID, cards: [], drawAllowed: true};
+        //game.roundPlayers+=1;
         return game;
     }
 
-    //remove all of player
     removePlayer(socketID){
         let games = [];
         for (var [key, value] of this.games) {
@@ -47,40 +44,30 @@ class GameList {
                         console.log("Game Deleted");
                         this.games.delete(value.gameID);
                         if(!value.gameEnded){
-                            conn.cancelGame(value.gameID);
-                            value.gameEnded = true;
+                            conn.setLost(value.gameID, value.players[i],0);
                         }
                     }else{//se nao for o unico no jogo
                         //adiciona nos jogos para returnar
                         games.push(value);
                         //remove dos players
                         value.players.splice(i, 1);
+                        // remove das maos
+                        value.hands.splice(i, 1);
                         //remover os meus pontos
                         value.playersPoints.splice(i, 1);
                         // remover dos sockets
                         value.playersSocketID.splice(i, 1);
-                        //retirar dos podio
-                        for(var ii= 0;  ii < value.playersPlaces.length; ii++){
-                            if(value.playersPlaces[ii] == socketID){
-                                value.playersPlaces.splice(ii, 1);
-                                continue;
-                            }
+                        // remove o jogador da ronda
+                        if(value.roundPlayers>0){
+                            value.roundPlayers--;
                         }
-                        //se fui eu a sair
-                        if(i+1 == value.playerTurn){
-                            console.log("Eu sai");
-                            if(value.playerTurn > value.players.length){
-                                console.log("volta inicio");
-                                value.playerTurn=1;
-                            }
-                            //se foi antes do jogador atual
-                        }else if(i+1 < value.playerTurn){
-                            console.log("Saio antes do atual");
-                            value.playerTurn--;
-                            // quem saio era depois de mim
-                        }else if(i+1 > value.playerTurn){
-                            console.log("Saio depois do atual, nao se faz nada");
-                        }
+                    }
+                    //ve se ficou um e é definido como loser
+                    if(!value.gameEnded && value.playersSocketID.length === 1){
+                        value.gameEnded=true;
+                        conn.cancelGame(value.gameID);
+                    }else{
+                        conn.setLost(value.gameID, value.players[i],0);
                     }
                 }
             }
@@ -88,61 +75,67 @@ class GameList {
         return games;
     }
 
-    //remove game from player
     removeGamePlayer(socketID, gameID){
-
         let games = [];
         for (var [key, value] of this.games) {
             for(var i=0;  i < value.playersSocketID.length; i++){
-                if(value.playersSocketID[i] == socketID && value.gameID == gameID){ //caso esteja no jogo e seja este que quero fechar
-                    if(value.playersSocketID.length == 1){ //caso seja o unico
+                //caso esteja no jogo e seja este que quero fechar
+                if(value.playersSocketID[i] == socketID && value.gameID == gameID){
+                    //caso seja o unico
+                    if(value.playersSocketID.length == 1){
                         console.log("Game Deleted");
                         this.games.delete(value.gameID);
                         if(!value.gameEnded){
-                            conn.cancelGame(value.gameID);
-                            value.gameEnded = true;
+                            conn.setLost(value.gameID, value.players[i],0);
                         }
                     }else{//se nao for o unico no jogo
-                        // //adiciona nos jogos para returnar menos a mim
+                        // adiciona nos jogos para returnar menos a mim
                         games.push(value);
-                        //remove dos players
+                        // remove dos players
                         value.players.splice(i, 1);
+                        // remove das maos
+                        value.hands.splice(i, 1);
                         //remover os meus pontos
                         value.playersPoints.splice(i, 1);
                         // remover dos sockets
                         value.playersSocketID.splice(i, 1);
-                        //retirar dos podio
-                        for(var ii= 0;  ii < value.playersPlaces.length; ii++){
-                            if(value.playersPlaces[ii] == socketID){
-                                value.playersPlaces.splice(ii, 1);
-                                continue;
-                            }
-                        }
-                        //se fui eu a sair
-                        if(i+1 == value.playerTurn){
-                            console.log("Eu sai");
-                            if(value.playerTurn > value.players.length){
-                                console.log("volta inicio");
-                                value.playerTurn=1;
-                            }
-                            //se foi antes do jogador atual
-                        }else if(i+1 < value.playerTurn){
-                            console.log("Saio antes do atual");
-                            value.playerTurn--;
-                            // quem saio era depois de mim
-                        }else if(i+1 > value.playerTurn){
-                            console.log("Saio depois do atual, nao se faz nada");
+                        // remove o jogador da ronda
+                        if(value.roundPlayers>0){
+                            value.roundPlayers--;
                         }
                     }
-                    // como removeu ve se so ficou um e é definido como winner
-                    if(!value.gameEnded && value.playersSocketID.length == 1){
+                    //ve se ficou um e é definido como loser
+                    if(!value.gameEnded && value.playersSocketID.length === 1){
                         value.gameEnded=true;
-                        conn.setWinner(value.gameID, value.players[0]);
+                        conn.cancelGame(value.gameID);
+                    }else{
+                        conn.setLost(value.gameID, value.players[i],0);
                     }
                 }
             }
         }
         return games;
+    }
+
+    removeGame(socketID, gameID){
+        for (var [key, value] of this.games) {
+            for(var i=0;  i < value.playersSocketID.length; i++){
+                if(value.playersSocketID[i] == socketID && value.gameID == gameID){
+                    if(value.playersSocketID.length == 1){
+                        console.log("Game Deleted");
+                        this.games.delete(value.gameID);
+                    }else{
+                        value.players.splice(i, 1);
+                        value.hands.splice(i, 1);
+                        value.playersPoints.splice(i, 1);
+                        value.playersSocketID.splice(i, 1);
+                        if(value.roundPlayers>0){
+                            value.roundPlayers--;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     getConnectedGamesOf(socketID) {

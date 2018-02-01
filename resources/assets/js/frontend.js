@@ -12,10 +12,10 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import VueRouter from 'vue-router';
-//import VueSocketio from 'vue-socket.io';
+import VueSocketio from 'vue-socket.io';
 
 Vue.use(VueRouter);
-//Vue.use(VueSocketio, 'http://127.0.0.1:8080');
+Vue.use(VueSocketio, 'http://127.0.0.1:8080');
 
 const gameLobby = Vue.component('game-lobby-component', require('./components/frontend/gameLobbyComponent.vue'));
 const statistics = Vue.component('statistics-component', require('./components/frontend/statisticsComponent.vue'));
