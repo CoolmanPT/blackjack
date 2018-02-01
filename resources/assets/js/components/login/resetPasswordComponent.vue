@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-5 col-sm-12 m-auto">
                 <div class="card ml-auto mr-auto mt-5">
-                    <div class="card-header bg-primary">
+                    <div class="card-header bg-dark">
                         <h1 class="text-center text-light">Recover Password</h1>
                     </div>
                     <div class="card-body">
@@ -14,7 +14,7 @@
                             <div class="form-group input-group">
                                 <input type="password" name="passwordConfirmation" v-model="passwordConfirmation" v-bind:class="{ 'is-invalid': missingPasswordConfirmation || wrongPasswordConfirmation }" class="form-control" placeholder="Confirm Password"  />
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block mt-4">Change</button>
+                            <button type="submit" class="btn btn-dark btn-block mt-4">Change</button>
 
 
 

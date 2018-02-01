@@ -25,34 +25,37 @@ Route::middleware('auth:api')->post('logout','LoginControllerAPI@logout');
 Route::post('password/email', 'LoginControllerAPI@sendResetLinkEmail');
 Route::post('password/reset', 'LoginControllerAPI@resetPassword');
 
-Route::post('register', 'UserControllerAPI@store'); //REGISTER NEW USER
-Route::post('activate', 'UserControllerAPI@activate'); //ACTIVATE NEW USER
+Route::post('register', 'UserControllerAPI@store');
+Route::post('activate', 'UserControllerAPI@activate');
 
 
 /******************
 ADMIN ROUTES
  *****************/
 
-Route::middleware('auth:api', 'checkAdmin')->get('/settings', 'ConfigControllerAPI@getPlatformData'); //RETURN's SETTINGS INFO
-Route::middleware('auth:api', 'checkAdmin')->post('/settings/update', 'ConfigControllerAPI@update'); //UPDATE SETTINGS
-Route::middleware('auth:api', 'checkAdmin')->post('/user/email/update', 'UserControllerAPI@updateEmail'); //UPDATE ADMIN EMAIL
-Route::middleware('auth:api', 'checkAdmin')->post('users', 'UserControllerAPI@getUsers'); //GET LIST OF USERS TO MANAGE
-Route::middleware('auth:api', 'checkAdmin')->delete('users/{id}/{reason?}', 'UserControllerAPI@delete'); //DELETE USER
-Route::middleware('auth:api', 'checkAdmin')->put('users/{id}', 'UserControllerAPI@updateState'); //CHANGE STATE USER
-Route::middleware('auth:api', 'checkAdmin')->get('/statistic', 'StatisticAPI@getStatistic'); //RETURN's STATISTIC INFO
-Route::middleware('auth:api', 'checkAdmin')->post('/gamesPerDay', 'StatisticAPI@getGamesPerDate'); //RETURN's GAMES PER DAY BETWEEN TWO DATES
-Route::middleware('auth:api', 'checkAdmin')->post('/usersStatistic', 'UserControllerAPI@getUsersStatistic'); //RETURN's GAMES PER DAY BETWEEN TWO DATES
-Route::middleware('auth:api', 'checkAdmin')->post('/pieces', 'ImgControllerAPI@getImages'); //RETURN's PIECES
-Route::middleware('auth:api', 'checkAdmin')->delete('pieces/{id}', 'ImgControllerAPI@delete'); //DELETE PIECE
-Route::middleware('auth:api', 'checkAdmin')->post('pieces/store', 'ImgControllerAPI@store'); //ADD PIECE
 
+Route::middleware('auth:api', 'checkAdmin')->get('/decks', 'DeckControllerAPI@getDecks');
+Route::middleware('auth:api', 'checkAdmin')->delete('decks/{id}', 'DeckControllerAPI@delete');
+Route::middleware('auth:api', 'checkAdmin')->post('decks/store', 'DeckControllerAPI@store');
+Route::middleware('auth:api', 'checkAdmin')->post('decks/update', 'DeckControllerAPI@update');
+Route::middleware('auth:api', 'checkAdmin')->post('decks/addCard', 'DeckControllerAPI@update');
+
+/******************
+USER ROUTES
+ *****************/
+Route::middleware('auth:api', 'checkPlayer')->get('getnewuser/{id}', 'GameControllerAPI@getuser');
+Route::middleware('auth:api', 'checkPlayer')->post('createGame', 'GameControllerAPI@store');
+Route::middleware('auth:api', 'checkPlayer')->delete('deleteOwnAccount', 'UserControllerAPI@deleteOwnAccount');
+Route::middleware('auth:api', 'checkPlayer')->post('statisticOfUser', 'StatisticAPI@getStatisticOfUser');
+Route::middleware('auth:api', 'checkPlayer')->post('/user/update', 'UserControllerAPI@update');
+Route::middleware('auth:api', 'checkPlayer')->get('/game/countPieces', 'ImgControllerAPI@getImagesCount');
 
 /******************
 USER/ADMIN ROUTES
  *****************/
 
-Route::middleware('auth:api')->post('/user/password/update', 'UserControllerAPI@updatePassword'); //UPDATE PASSWORD
-Route::middleware('auth:api')->post('/user/avatar/update', 'UserControllerAPI@updateAvatar'); //UPDATE AVATAR
+Route::middleware('auth:api')->post('/user/password/update', 'UserControllerAPI@updatePassword');
+Route::middleware('auth:api')->post('/user/avatar/update', 'UserControllerAPI@updateAvatar');
 
 
 

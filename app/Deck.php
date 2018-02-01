@@ -10,6 +10,7 @@ class Deck extends Model
         'id', 'name', 'hidden_face_image_path', 'active', 'complete'
     ];
 
+
     public function cards(){
         return $this->hasToMany('App\Card');
     }

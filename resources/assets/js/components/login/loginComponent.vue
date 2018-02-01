@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-md-8 col-sm-12">
                 <div class="card ml-auto mr-auto mt-3">
-                    <div class="card-header bg-primary">
+                    <div class="card-header bg-dark">
                         <h1 class="text-center text-light">Statistics</h1>
                     </div>
                     <div class="card-body">
@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="card ml-auto mr-auto mt-3">
-                    <div class="card-header bg-primary">
+                    <div class="card-header bg-dark">
                         <h1 class="text-center text-light">Login</h1>
                     </div>
 
@@ -37,7 +37,7 @@
                             </div>
                             <router-link to="/password/reset" class="float-right text-muted mt-0 small font-italic" >Forgot Password?</router-link>
 
-                                <button type="submit" class="btn btn-primary btn-block mt-4">Log in</button>
+                                <button type="submit" class="btn btn-dark btn-block mt-4">Log in</button>
 
 
 

@@ -19,12 +19,14 @@ class RecoverPassword extends Mailable
 
     private $token;
     private $user;
+    private $sentBy;
 
 
-    public function __construct($token, $to)
+    public function __construct($token, $to, $from)
     {
         $this->token = $token;
         $this->user = $to;
+        $this->sentBy = $from;
     }
 
     /**
@@ -41,7 +43,7 @@ class RecoverPassword extends Mailable
             ->with([
                 'token' => $this->token,
                 'user' => $this->user,
-            ])->subject($subject);
+            ])->from($this->sentBy, $name)->subject($subject);
 
 
     }

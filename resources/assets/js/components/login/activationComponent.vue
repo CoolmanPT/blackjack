@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-5 col-sm-12 m-auto">
                 <div class="card ml-auto mr-auto mt-5">
-                    <div class="card-header bg-primary">
+                    <div class="card-header bg-dark">
                         <h1 class="text-center text-light">Account Activation</h1>
                     </div>
                     <div class="card-body">

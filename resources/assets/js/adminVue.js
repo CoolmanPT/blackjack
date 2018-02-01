@@ -5,7 +5,8 @@ window.Vue = require('vue');
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import axios from 'axios';
-
+import BootstrapVue from 'bootstrap-vue';
+Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 
 /*****************************************
@@ -56,9 +57,16 @@ var isLoggedMixin = {
 //DASHBOARD
 const dashboard = Vue.component('dashboard-component', require('./components/admin/adminDashboard.vue'));
 const settings = Vue.component('settings-component', require('./components/admin/settingsComponent.vue'));
+const users = Vue.component('users-component', require('./components/admin/usersComponent.vue'));
+const decks = Vue.component('decks-component', require('./components/admin/decksComponent.vue'));
+const newDeck = Vue.component('new-deck-component', require('./components/admin/newDeckComponent.vue'));
+const addCard = Vue.component('add-card-component', require('./components/admin/addCardComponent.vue'));
 Vue.component('platform-email-settings-component', require('./components/admin/platform-email_settingsComponent.vue'));
 Vue.component('admin-change-email-component', require('./components/admin/admin-change_emailComponent.vue'));
 Vue.component('admin-change-password-component', require('./components/admin/admin-change_passwordComponent.vue'));
+
+
+
 
 
 
@@ -86,8 +94,10 @@ const routes = [
     { path: '/', redirect: 'dashboard' },
     { path: '/dashboard', component: dashboard },
     { path: '/settings', component: settings },
-    //{ path: '/users', component: users },
-    //{ path: '/pieces', component: pieces },
+    { path: '/users', component: users },
+    { path: '/decks', component: decks },
+    { path: '/newDeck', component: newDeck},
+    { path: '/addCard:deck', component: addCard},
 
 ];
 

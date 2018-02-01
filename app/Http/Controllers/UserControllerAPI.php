@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Mail\ActivateAccount;
 use Illuminate\Http\Request;
 use Validator;
@@ -213,6 +214,16 @@ class UserControllerAPI extends Controller
                 ->get();
 
             return UserStatistics::collection($users);
+        }else{
+            return response()->json(['message' => 'Request inválido.'], 400);
+        }
+    }
+
+    public function getUsers(Request $request){
+        if ($request->wantsJson()){
+            $users = User::where('admin',0)->get();
+
+            return UserResource::collection($users);
         }else{
             return response()->json(['message' => 'Request inválido.'], 400);
         }

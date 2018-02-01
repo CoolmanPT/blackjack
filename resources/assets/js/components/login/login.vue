@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-5 col-sm-12  mt-5 ml-auto mr-auto">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header bg-dark">
                             <h1 class="text-center">Login</h1>
                         </div>
                         <div class="card-body pb-1">

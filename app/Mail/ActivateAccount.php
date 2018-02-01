@@ -18,11 +18,13 @@ class ActivateAccount extends Mailable
      */
     private $token;
     private $sentBy;
+    private $user;
 
-    public function __construct($token, $from)
+    public function __construct($token, $from, $to)
     {
         $this->token = $token;
         $this->sentBy = $from;
+        $this->user = $to;
     }
 
     /**

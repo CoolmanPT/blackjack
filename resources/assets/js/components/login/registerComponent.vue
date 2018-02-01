@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-5 col-sm-12 m-auto">
                 <div class="card ml-auto mr-auto mt-5">
-                    <div class="card-header bg-primary">
+                    <div class="card-header bg-dark">
                         <h1 class="text-center text-light">New User</h1>
                     </div>
                     <div class="card-body">
@@ -33,7 +33,7 @@
                                        class="form-control" placeholder="Confirm Password"/>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                            <button type="submit" class="btn btn-dark btn-block">Register</button>
 
                             <div class="clearfix">
                                 <div class="alert alert-success" role="alert" v-cloak v-show="success">

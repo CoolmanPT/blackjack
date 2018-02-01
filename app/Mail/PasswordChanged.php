@@ -16,9 +16,14 @@ class PasswordChanged extends Mailable
      *
      * @return void
      */
-    public function __construct()
+
+    private $user;
+    private $sentBy;
+    public function __construct($to, $from)
     {
-        //
+        $this->user = $to;
+        $this->sentBy = $from;
+
     }
 
     /**
@@ -31,6 +36,7 @@ class PasswordChanged extends Mailable
         $name = 'BlackJack Staff';
         $subject = 'Password changed!';
 
-        return $this->view('email.passwordChanged');
+        return $this->view('email.passwordChanged')
+            ->from($this->sentBy, $name)->subject($subject);
     }
 }

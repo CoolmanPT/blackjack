@@ -1,9 +1,8 @@
 /node_modules
-/node_server/node_modules
 /public/hot
 /public/storage
 /public/js
-/app/Http/Controllers/LoginControllerAPI.php
+/public/css
 /storage/*.key
 /vendor
 /.idea
@@ -12,4 +11,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+/app/Http/Controllers/LoginControllerAPI.php
 .env
